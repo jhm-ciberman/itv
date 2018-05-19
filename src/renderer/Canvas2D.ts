@@ -1,14 +1,16 @@
-import Mesh from "./Mesh";
+import MeshRenderer2D from "./MeshRenderer2D";
 
 export default class Canvas2D {
 
 	private _gl: WebGL2RenderingContext;
 	
-	public child: Mesh | null = null; 
+	public child: MeshRenderer2D | null = null; 
 
 	constructor(gl: WebGL2RenderingContext) {
 		this._gl = gl;
 		this._gl.disable(gl.CULL_FACE);
+
+
 	}
 
 	public render() {

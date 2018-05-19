@@ -1,6 +1,9 @@
 import ShaderLoader from "./loading/ShaderLoader";
 import Canvas2D from "./renderer/Canvas2D";
-import Quad from "./renderer/Quad";
+import MeshRenderer2D from "./renderer/MeshRenderer2D";
+import Material from "./renderer/Material";
+import GLTexture from "./gl/GLTexture";
+import Quad from "./renderer/mesh/Quad";
 
 export default class RendererWindow {
 
@@ -8,8 +11,19 @@ export default class RendererWindow {
 
 	public async init() {
 		const canvas = this._createCanvas();
-		this._canvas2D = await this._createCanvas2D(canvas);
+		const image = await this._loadImage("../res/sonny.jpg")
+		this._canvas2D = await this._createCanvas2D(canvas, image);
 		
+	}
+
+	private async _loadImage(src: string): Promise<HTMLImageElement> {
+		return new Promise<HTMLImageElement>((resolve) => {
+			const image = new Image();
+			image.src = src;  // MUST BE SAME DOMAIN!!!
+			image.onload = function () {
+				resolve(image);
+			}
+		});
 	}
 
 	public render() {
@@ -24,14 +38,16 @@ export default class RendererWindow {
 		return canvas;
 	}
 
-	private async _createCanvas2D(canvas: HTMLCanvasElement) {
-		const gl = canvas.getContext("webgl2") as WebGL2RenderingContext; 
+	private async _createCanvas2D(canvas: HTMLCanvasElement, image:HTMLImageElement) {
+		const gl = canvas.getContext("webgl2") as WebGL2RenderingContext;
+		this._resize(canvas);
 		const canvas2D = new Canvas2D(gl);
 		const shaderLoader = new ShaderLoader(gl);
-		const program = await shaderLoader.load("./res/vertex.glsl", "./res/fragment.glsl");
+		const shader = await shaderLoader.load("./res/vertex.glsl", "./res/fragment.glsl");
 		const quad = new Quad(gl);
-		quad.setShaderProgram(program);
-		canvas2D.child = quad;
+		const material = new Material(shader);
+		material.texture = new GLTexture(gl, image);
+		canvas2D.child = new MeshRenderer2D(gl, quad, material);
 		return canvas2D;
 	}
 

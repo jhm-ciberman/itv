@@ -7,16 +7,14 @@ export default class GLBuffer {
 	private readonly _buffer: WebGLBuffer;
 
 	private readonly _bufferType: number; 
-	public dataType: number; 
 	
 	private readonly _gl: WebGL2RenderingContext;
 
-	constructor(gl: WebGL2RenderingContext, bufferType: number, dataType: number, data: TypedArray) {
+	constructor(gl: WebGL2RenderingContext, bufferType: number, data: TypedArray) {
 		this._gl = gl;
 		// Create a buffer
 		this._buffer = this._gl.createBuffer() as WebGLBuffer;
 		this._bufferType = bufferType;
-		this.dataType = dataType;
 		this.upload(data);
 	}
 
@@ -28,5 +26,9 @@ export default class GLBuffer {
 	public upload(data: TypedArray) {
 		this._gl.bindBuffer(this._bufferType, this._buffer);
 		this._gl.bufferData(this._bufferType, data, this._gl.STATIC_DRAW);
+	}
+
+	public destroy() {
+		this._gl.deleteBuffer(this._buffer);
 	}
 }
