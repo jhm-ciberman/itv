@@ -5,10 +5,10 @@ export default class Quad extends IndexedMesh2D {
 	constructor(gl: WebGL2RenderingContext) {
 		const builder = new Mesh2DBuilder(gl);
 		builder.vertices = [
-			-.5, -.5,
-			.5, -.5,
-			.5, .5,
-			-.5, .5,
+			-50, -50,
+			50, -50,
+			50, 50,
+			-50, 50,
 		];
 		builder.uvs = [
 			0, 0,

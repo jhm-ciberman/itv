@@ -43,7 +43,7 @@ export default class MeshRenderer2D {
 	public draw(): void {
 		console.log("draw");
 		this._gl.bindVertexArray(this._vao);
-		this._material.use();
+		this._material.use(this._gl);
 		this._mesh.performDrawCall();
 	}
 }

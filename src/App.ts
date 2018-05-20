@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app } from 'electron';
 import MainWindow from "./MainWindow";
 
 export default class App {

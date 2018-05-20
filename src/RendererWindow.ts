@@ -48,6 +48,7 @@ export default class RendererWindow {
 		const material = new Material(shader);
 		material.texture = new GLTexture(gl, image);
 		canvas2D.child = new MeshRenderer2D(gl, quad, material);
+		canvas2D.material = material;
 		return canvas2D;
 	}
 
