@@ -28,7 +28,7 @@ export default class WorldRenderer {
 		const view = mat4.create();
 		const viewProjection = mat4.create();
 		mat4.perspective(proj, 45 * Math.PI / 180, gl.canvas.width / gl.canvas.height, 0.1, 1000);
-		mat4.lookAt(view, [0,0,0], [0, 0, 3], [0, 1, 0]);
+		mat4.lookAt(view, [0,1,0], [0, 0, 3], [0, 1, 0]);
 		//mat4.invert(view, view);
 		//const w = 1; //gl.canvas.width / 2;
 		//const h = 1; //gl.canvas.height / 2;
