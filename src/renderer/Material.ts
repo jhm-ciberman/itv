@@ -1,6 +1,6 @@
 import GLTexture from "../gl/GLTexture";
 import GLShaderProgram from "../gl/GLShaderProgram";
-import { glMatrix, mat2d, mat3 } from "gl-matrix";
+import { mat4 } from "gl-matrix";
 
 export default class Material {
 	public shader: GLShaderProgram;
@@ -18,16 +18,14 @@ export default class Material {
 
 	public rotation: number = 0;
 
-	public use(gl: WebGL2RenderingContext) {
+	public use(gl: WebGL2RenderingContext, matrix: mat4) {
 		this.shader.use();
 		
 		if (this.texture && this._textureUniform) {
 			this.texture.bind(this._textureUniform, 0);
 		}
 
-		const m = mat3.create();
-		mat3.projection(m, gl.canvas.width, gl.canvas.height);
-		mat3.rotate(m, m, this.rotation);
-		gl.uniformMatrix3fv(this._matrixUniform, false, m)
+		gl.uniformMatrix4fv(this._matrixUniform, false, matrix);
+		
 	}
 }

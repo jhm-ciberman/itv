@@ -1,16 +1,19 @@
-import Material from "./Material";
 import GLBuffer from "../gl/GLBuffer";
-import Mesh2D from "./mesh/Mesh2D";
+import Node3D from "./Node3D";
+import { mat4 } from "gl-matrix";
+import Mesh from "../renderer/mesh/Mesh";
+import Material from "../renderer/Material";
 
-export default class MeshRenderer2D {
+export default class MeshRenderer extends Node3D{
 
 	private _gl: WebGL2RenderingContext;
-	private _mesh: Mesh2D;
+	private _mesh: Mesh;
 	private _material: Material;
 
 	private _vao: WebGLVertexArrayObject;
 
-	constructor(gl: WebGL2RenderingContext, mesh: Mesh2D, material: Material) {
+	constructor(gl: WebGL2RenderingContext, mesh: Mesh, material: Material) {
+		super();
 		this._gl = gl;
 		this._mesh = mesh;
 		this._material = material;
@@ -20,13 +23,9 @@ export default class MeshRenderer2D {
 		gl.bindVertexArray(this._vao);
 
 		this._bindAttributes(gl, mesh, material);
-
-		// and make it the one we're currently working with
-
-
 	}
 
-	private _bindAttributes(gl: WebGL2RenderingContext ,mesh: Mesh2D, material: Material) {
+	private _bindAttributes(gl: WebGL2RenderingContext ,mesh: Mesh, material: Material) {
 		const attributes = mesh.getAttributePointers();
 		let lastBuffer: GLBuffer | null = null;
 		for (var i = 0; i < attributes.length; i++) {
@@ -35,15 +34,17 @@ export default class MeshRenderer2D {
 				attrib.buffer.bind();
 				lastBuffer = attrib.buffer;
 			}
-			console.log("Bind: ", attrib.name);
 			attrib.bind(gl, material.shader);
 		}
 	}
 
-	public draw(): void {
-		console.log("draw");
+	protected _renderItself(worldMatrix: mat4) {
+		this._updateWorldMatrix(worldMatrix);
+		console.log(this._localMatrix);
+		console.log(this._worldMatrix);
 		this._gl.bindVertexArray(this._vao);
-		this._material.use(this._gl);
+		this._material.use(this._gl, this._worldMatrix);
 		this._mesh.performDrawCall();
+		super._renderChildren(worldMatrix);
 	}
 }

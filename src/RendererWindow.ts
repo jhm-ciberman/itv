@@ -1,19 +1,27 @@
 import ShaderLoader from "./loading/ShaderLoader";
-import Canvas2D from "./renderer/Canvas2D";
-import MeshRenderer2D from "./renderer/MeshRenderer2D";
-import Material from "./renderer/Material";
 import GLTexture from "./gl/GLTexture";
+import Material from "./renderer/Material";
+import WorldRenderer from "./renderer/WorldRenderer";
+import MeshRenderer from "./nodes/MeshRenderer";
 import Quad from "./renderer/mesh/Quad";
+import GLShaderProgram from "./gl/GLShaderProgram";
+import Cube from "./renderer/mesh/Cube";
 
 export default class RendererWindow {
 
-	private _canvas2D!: Canvas2D;
+	private _worldRenderer!: WorldRenderer;
+
+	private _canvas!: HTMLCanvasElement;
 
 	public async init() {
-		const canvas = this._createCanvas();
+		this._canvas = this._createCanvas();
+		const gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
+		const shaderLoader = new ShaderLoader(gl);
+		const shader = await shaderLoader.load("./res/vertex.glsl", "./res/fragment.glsl");
 		const image = await this._loadImage("../res/sonny.jpg")
-		this._canvas2D = await this._createCanvas2D(canvas, image);
-		
+		const rootNode = this._loadScene(gl, image, shader);
+		this._worldRenderer = new WorldRenderer(gl, rootNode);
+		this._render();
 	}
 
 	private async _loadImage(src: string): Promise<HTMLImageElement> {
@@ -26,8 +34,24 @@ export default class RendererWindow {
 		});
 	}
 
-	public render() {
-		this._canvas2D.render();
+	private _render() {
+		this._resize(this._canvas);
+		this._worldRenderer.render();
+		window.requestAnimationFrame(this._render.bind(this));
+	}
+
+	private _resize(canvas: HTMLCanvasElement) {
+		// Lookup the size the browser is displaying the canvas.
+		const displayWidth = window.innerWidth;
+		const displayHeight = window.innerHeight;
+
+		// Check if the canvas is not the same size.
+		if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+
+			// Make the canvas the same size
+			canvas.width = displayWidth;
+			canvas.height = displayHeight;
+		}
 	}
 
 	private _createCanvas() {
@@ -38,31 +62,13 @@ export default class RendererWindow {
 		return canvas;
 	}
 
-	private async _createCanvas2D(canvas: HTMLCanvasElement, image:HTMLImageElement) {
-		const gl = canvas.getContext("webgl2") as WebGL2RenderingContext;
-		this._resize(canvas);
-		const canvas2D = new Canvas2D(gl);
-		const shaderLoader = new ShaderLoader(gl);
-		const shader = await shaderLoader.load("./res/vertex.glsl", "./res/fragment.glsl");
-		const quad = new Quad(gl);
+	private _loadScene(gl: WebGL2RenderingContext, image: HTMLImageElement, shader: GLShaderProgram) {
+		const quad = new Cube(gl);
 		const material = new Material(shader);
 		material.texture = new GLTexture(gl, image);
-		canvas2D.child = new MeshRenderer2D(gl, quad, material);
-		canvas2D.material = material;
-		return canvas2D;
+		const node = new MeshRenderer(gl, quad, material);
+		return node;
 	}
 
-	private _resize(canvas: HTMLCanvasElement) {
-		// Lookup the size the browser is displaying the canvas.
-		const displayWidth = canvas.clientWidth;
-		const displayHeight = canvas.clientHeight;
 
-		// Check if the canvas is not the same size.
-		if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
-
-			// Make the canvas the same size
-			canvas.width = displayWidth;
-			canvas.height = displayHeight;
-		}
-	}
 }

@@ -1,14 +1,14 @@
-import Mesh2DBuilder from "./Mesh2DBuilder";
-import IndexedMesh2D from "./IndexedMesh2D";
+import IndexedMesh from "./IndexedMesh";
+import MeshBuilder from "./MeshBuilder";
 
-export default class Quad extends IndexedMesh2D {
+export default class Quad extends IndexedMesh {
 	constructor(gl: WebGL2RenderingContext) {
-		const builder = new Mesh2DBuilder(gl);
+		const builder = new MeshBuilder(gl);
 		builder.vertices = [
-			-50, -50,
-			50, -50,
-			50, 50,
-			-50, 50,
+			-.50, -.50, 0,
+			.50, -.50, 0,
+			.50, .50, 0,
+			-.50, .50, 0,
 		];
 		builder.uvs = [
 			0, 0,

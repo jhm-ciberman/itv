@@ -1,9 +1,7 @@
 import RendererWindow from "./RendererWindow";
 
 const r = new RendererWindow();
-r.init().then(() => {
-	r.render();
-}).catch(e => {
+r.init().catch(e => {
 	console.error(e);
 })
 

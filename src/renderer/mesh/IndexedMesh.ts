@@ -1,14 +1,14 @@
-import Mesh2D from "./Mesh2D";
-import Mesh2DBuilder from "./Mesh2DBuilder";
 import GLBuffer from "../../gl/GLBuffer";
+import Mesh from "./Mesh";
+import MeshBuilder from "./MeshBuilder";
 
-export default class IndexedMesh2D extends Mesh2D {
+export default class IndexedMesh extends Mesh {
 
 	public readonly indexBuffer: GLBuffer;
 
 	public readonly indexCount: number;
 
-	constructor(gl: WebGL2RenderingContext, builder: Mesh2DBuilder) {
+	constructor(gl: WebGL2RenderingContext, builder: MeshBuilder) {
 		super(gl, builder);
 		this.indexCount = builder.indices.length;
 		this.indexBuffer = new GLBuffer(this._gl, this._gl.ELEMENT_ARRAY_BUFFER, new Uint8Array(builder.indices));

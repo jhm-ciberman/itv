@@ -1,7 +1,7 @@
-import Mesh2D from "./Mesh2D";
-import IndexedMesh2D from "./IndexedMesh2D";
+import IndexedMesh from "./IndexedMesh";
+import Mesh from "./Mesh";
 
-export default class Mesh2DBuilder {
+export default class MeshBuilder {
 
 	public vertices: number[] = [];
 	public uvs: number[] = [];
@@ -12,11 +12,11 @@ export default class Mesh2DBuilder {
 		this._gl = gl;
 	}
 
-	public build(): Mesh2D {
+	public build(): Mesh {
 		if (this.indices.length > 0) {
-			return new IndexedMesh2D(this._gl, this);
+			return new IndexedMesh(this._gl, this);
 		} else {
-			return new Mesh2D(this._gl, this);
+			return new Mesh(this._gl, this);
 		}
 	}
 }

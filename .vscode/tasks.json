@@ -7,6 +7,16 @@
 			"type": "npm",
 			"script": "start",
 			"problemMatcher": []
+		},
+		{
+			"label": "watch",
+			"type": "npm",
+			"script": "watch",
+			"problemMatcher": [
+				"$tsc-watch"
+			],
+			"isBackground": true,
+			"auto": true
 		}
 	]
 }
