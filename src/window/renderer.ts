@@ -1,4 +1,4 @@
-import RendererWindow from "./RendererWindow";
+import RendererWindow from "../window/RendererWindow";
 
 const r = new RendererWindow();
 r.init().catch(e => {

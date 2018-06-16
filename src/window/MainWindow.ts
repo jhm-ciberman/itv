@@ -13,7 +13,7 @@ export default class MainWindow extends EventEmitter {
 		this._win = new BrowserWindow({ width: 800, height: 600 , show: false})
 
 		const str = url.format({
-			pathname: path.resolve(__dirname, '../res/index.html'),
+			pathname: path.resolve(__dirname, '../../res/index.html'),
 			protocol: 'file:',
 			slashes: true
 		});
