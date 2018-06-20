@@ -5,11 +5,9 @@ import DisplayObject3D from "../nodes/DisplayObject3D";
 
 export default class WorldRenderer3D {
 
-	private _rootNode: DisplayObject3D;
 	private _gl: WebGL2RenderingContext;
 
-	constructor(gl: WebGL2RenderingContext, rootNode: DisplayObject3D) {
-		this._rootNode = rootNode;
+	constructor(gl: WebGL2RenderingContext) {
 		gl.disable(gl.CULL_FACE);
 		gl.clearColor(0.2, 0.2, 0.2, 1.0);  // Clear to black, fully opaque
 		gl.clearDepth(1.0);                 // Clear everything
@@ -18,15 +16,15 @@ export default class WorldRenderer3D {
 		this._gl = gl;
 	}
 
-	public render(camera: PerspectiveCamera) {
+	public render(rootNode: DisplayObject3D, camera: PerspectiveCamera) {
 		const gl = this._gl;
 		// Tell WebGL how to convert from clip space to pixels
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-		this._rootNode[SystemSymbols.updateWorldMatrix](mat4.create(), true);
-		this._visitNode(this._rootNode, camera.getMatrix());
+		rootNode[SystemSymbols.updateWorldMatrix](mat4.create(), true);
+		this._visitNode(rootNode, camera.getMatrix());
 	}
 
 

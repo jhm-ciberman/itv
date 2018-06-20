@@ -1,35 +1,43 @@
-import WorldRenderer from "../renderer/WorldRenderer3D";
-import PerspectiveCamera from "../renderer/PerspectiveCamera";
-import TestModule from "../TestModule";
-import SceneLoader from "../SceneLoader";
+import Stage3D from "../renderer/Stage3D";
+import TestModuleLoader from "../modules/TestModuleLoader";
+import ModuleLoader from "../modules/ModuleLoader";
+import Module from "../modules/Module";
 
 export default class RendererWindow {
 
-	private _worldRenderer!: WorldRenderer;
+	private _stage: Stage3D;
 
-	private _canvas!: HTMLCanvasElement;
+	private _canvas: HTMLCanvasElement;
 
-	private _camera!: PerspectiveCamera;
-
-	private _module!: TestModule;
+	private _module!: Module;
 
 	private _timestamp: number = 0;
 
-	constructor() {
+	private _gl: WebGL2RenderingContext;
 
+	constructor() {
+		this._canvas = document.createElement("canvas");
+		this._canvas.width = 480;
+		this._canvas.height = 320;
+		document.body.appendChild(this._canvas);
+		this._gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
+		this._stage = new Stage3D(this._gl);
 	}
 
-	public async init() {
-		this._canvas = this._createCanvas();
-		const gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
+	public async load() {
+		const moduleLoader: ModuleLoader = new TestModuleLoader(this._gl, this._stage);
+		this._module = await moduleLoader.load(this._gl, this._stage);
+	}
 
-		const sceneLoader = new SceneLoader();
-		const rootNode = await sceneLoader.load(gl);
-		this._module = new TestModule(rootNode);
-		this._worldRenderer = new WorldRenderer(gl, rootNode);
-		this._camera = sceneLoader.createCamera(gl);
+	public start() {
 		this._timestamp = Date.now();
 		this._render(this._timestamp);
+	}
+
+	public static async main(): Promise<void> {
+		const window = new RendererWindow();
+		await window.load();
+		window.start();
 	}
 
 
@@ -38,7 +46,7 @@ export default class RendererWindow {
 		const deltaTime = (timestamp - this._timestamp) / 1000;
 		this._resize(this._canvas);
 		this._module.update(deltaTime);
-		this._worldRenderer.render(this._camera);
+		this._stage.render();
 		this._timestamp = timestamp;
 		window.requestAnimationFrame(this._render.bind(this));
 	}
@@ -57,12 +65,9 @@ export default class RendererWindow {
 		}
 	}
 
-	private _createCanvas() {
-		const canvas = document.createElement("canvas");
-		canvas.width = 480;
-		canvas.height = 320;
-		document.body.appendChild(canvas);
-		return canvas;
-	}
-
 }
+
+
+RendererWindow.main().catch((e) => {
+	console.error(e);
+});

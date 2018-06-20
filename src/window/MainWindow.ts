@@ -24,7 +24,13 @@ export default class MainWindow extends EventEmitter {
 		this._win.on('closed', () => {
 			console.log("Window closed");
 			this.emit('closed');
-		})
+		});
+		this._win.webContents.on("console-message", 
+			(_level: number, _message: string, _line: number, _sourceId: string) => {
+				
+				console.log([...arguments].join(" "));
+			}
+		)
 	}
 }
 

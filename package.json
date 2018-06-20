@@ -2,7 +2,7 @@
   "name": "itv",
   "version": "1.0.0",
   "description": "private",
-  "main": "dist/window/index.js",
+  "main": "dist/window/App.js",
   "scripts": {
     "start": "electron .",
     "watch": "tsc -p . --watch",

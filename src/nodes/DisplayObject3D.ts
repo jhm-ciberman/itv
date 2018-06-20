@@ -1,9 +1,9 @@
 import {mat4, quat, vec3 } from "gl-matrix";
-import Vector3 from "../math/Vector3";
 import SystemSymbols from "../SystemSymbols";
 import { EventEmitter } from "events";
+import IDisplayObject from "./IDisplayObject";
 
-export default class DisplayObject3D extends EventEmitter {
+export default class DisplayObject3D extends EventEmitter implements IDisplayObject {
 
 	private static readonly DEG2RAD: number = Math.PI / 180;
 	//private static readonly RAD2DEG: number = 180 / Math.PI;
@@ -30,7 +30,7 @@ export default class DisplayObject3D extends EventEmitter {
 		return this._children[Symbol.iterator]();
 	}
 
-	get children() {
+	get children(): IterableIterator<DisplayObject3D> {
 		return this._children[Symbol.iterator]();
 	}
 

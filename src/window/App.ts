@@ -28,3 +28,7 @@ export default class App {
 		});
 	}
 }
+
+// Init app
+new App();
+
