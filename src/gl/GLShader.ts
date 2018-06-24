@@ -23,8 +23,6 @@ export default class GLShader {
 
 	private readonly _gl: WebGL2RenderingContext; 
 
-	private readonly _a_position: number;
-	private readonly _a_texCoord: number;
 	private readonly _u_matrix: WebGLUniformLocation;
 	private readonly _u_texture: WebGLUniformLocation;
 	constructor(gl: WebGL2RenderingContext, vertexShaderSource: string, fragmentShaderSource: string) {
@@ -51,8 +49,8 @@ export default class GLShader {
 			throw new Error("Error compiling shader program: " + str);
 		}
 
-		this._a_position = this._gl.getAttribLocation(this._program, "a_position");
-		this._a_texCoord = this._gl.getAttribLocation(this._program, "a_texCoord");
+		// this._a_position = this._gl.getAttribLocation(this._program, "a_position");
+		// this._a_texCoord = this._gl.getAttribLocation(this._program, "a_texCoord");
 		this._u_matrix = this._gl.getUniformLocation(this._program, "u_matrix") as WebGLUniformLocation;
 		this._u_texture = this._gl.getUniformLocation(this._program, "u_texture") as WebGLUniformLocation;
 

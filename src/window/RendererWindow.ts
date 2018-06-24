@@ -5,6 +5,7 @@ import Stage from "../renderer/Stage";
 import GLRasterizer from "../gl/GLRasterizer";
 import ShaderLoader from "../loading/ShaderLoader";
 import * as path from "path";
+import TestModule3DLoader from "../modules/TestModule3DLoader";
 
 export default class RendererWindow {
 
@@ -42,7 +43,7 @@ export default class RendererWindow {
 
 		this._stage = new Stage(this._rasterizer, this._gl.canvas.width, this._gl.canvas.height);
 
-		const moduleLoader: ModuleLoader = new TestModule2DLoader(this._gl);
+		const moduleLoader: ModuleLoader = new TestModule3DLoader();
 		this._module = await moduleLoader.load(this._gl, this._stage);
 	}
 

@@ -16,15 +16,12 @@ export default class GLRasterizer {
 		this._gl = gl;
 
 		this._quadMesh = new GLMesh(gl, new Float32Array([
-			// x , y, u, v
-			-.50, -.50, 0, 0,
-			.50, -.50, 1, 0,
-			.50, .50, 1, 1,
-
-			-.50, -.50, 0, 0,
-			.50, .50, 1, 1,
-			-.50, .50, 0, 1,
-		]));
+			// x , y,  z,  u, v
+			-.50, -.50, 0, 0, 0,
+			+.50, -.50, 0, 1, 0,
+			-.50, +.50, 0, 0, 1,
+			+.50, +.50, 0, 1, 1,	
+		]), 4, gl.TRIANGLE_STRIP);
 
 		this._defaultShader = defaultShader;
 		this._currentShader = this._defaultShader;
@@ -40,6 +37,12 @@ export default class GLRasterizer {
 		this._currentShader.setMatrix(matrix);
 		this._currentShader.setTexture(texture);
 		this._quadMesh.drawCall();
+	}
+
+	public drawMesh(mesh: GLMesh, matrix: mat4, texture: GLTexture) {
+		this._currentShader.setMatrix(matrix);
+		this._currentShader.setTexture(texture);
+		mesh.drawCall();
 	}
 
 	public beginFrame() {

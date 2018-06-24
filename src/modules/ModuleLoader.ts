@@ -4,12 +4,6 @@ import Stage from "../renderer/Stage";
 
 export default abstract class ModuleLoader {
 
-	private _gl: WebGL2RenderingContext;
-
-	constructor(gl: WebGL2RenderingContext) {
-		this._gl = gl;
-	}
-
 
 	protected _resolve(relativePath: string): string {
 		return path.resolve(__dirname, "../../res/", relativePath);

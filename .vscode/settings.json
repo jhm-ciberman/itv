@@ -8,6 +8,12 @@
 		"**/dist": true
 	},
 	"cSpell.words": [
-		"glsl"
+		"a",
+		"coord",
+		"gl",
+		"glsl",
+		"mediump",
+		"rasterizer",
+		"tex"
 	]
 }
