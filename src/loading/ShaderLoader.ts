@@ -1,6 +1,4 @@
-import GLShaderProgram from "../gl/GLShaderProgram";
-import GLVertexShader from "../gl/GLVertexShader";
-import GLFragmentShader from "../gl/GLFragmentShader";
+import GLShader from "../gl/GLShader";
 import * as fse from "fs-extra";
 
 export default class ShaderLoader {
@@ -10,13 +8,12 @@ export default class ShaderLoader {
 	constructor(gl: WebGL2RenderingContext) {
 		this._gl = gl;
 	}
+
+	
 	
 	public async load(vertexPath: string, fragmentPath: string) {
-		const fragmentSource = await fse.readFile(fragmentPath, "utf8");
-		const vertexSource = await fse.readFile(vertexPath, "utf8");
-
-		const fragment = new GLFragmentShader(this._gl, fragmentSource);
-		const vertex = new GLVertexShader(this._gl, vertexSource);
-		return new GLShaderProgram(this._gl, fragment, vertex);
+		const fragment = await fse.readFile(fragmentPath, "utf8");
+		const vertex = await fse.readFile(vertexPath, "utf8");
+		return new GLShader(this._gl, vertex, fragment);
 	}
 }

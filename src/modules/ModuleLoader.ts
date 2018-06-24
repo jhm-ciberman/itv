@@ -1,18 +1,13 @@
 import Module from "./Module";
-import ShaderLoader from "../loading/ShaderLoader";
-import GLShaderProgram from "../gl/GLShaderProgram";
-import Stage3D from "../renderer/Stage3D";
 import * as path from "path";
+import Stage from "../renderer/Stage";
 
 export default abstract class ModuleLoader {
 
 	private _gl: WebGL2RenderingContext;
 
-	protected readonly _stage: Stage3D; 
-
-	constructor(gl: WebGL2RenderingContext, stage: Stage3D) {
+	constructor(gl: WebGL2RenderingContext) {
 		this._gl = gl;
-		this._stage = stage;
 	}
 
 
@@ -22,7 +17,7 @@ export default abstract class ModuleLoader {
 	
 
 	// TODO: remove this gl argument
-	public abstract async load(gl: WebGL2RenderingContext, stage: Stage3D): Promise<Module>;
+	public abstract async load(gl: WebGL2RenderingContext, stage: Stage): Promise<Module>;
 
 	protected async _loadImage(src: string): Promise<HTMLImageElement> {
 		return new Promise<HTMLImageElement>((resolve) => {
@@ -32,14 +27,5 @@ export default abstract class ModuleLoader {
 				resolve(image);
 			}
 		});
-	}
-
-
-	protected async _loadShader(vertexSourcePath: string, fragmentSourcePath: string): Promise<GLShaderProgram> {
-		const shaderLoader = new ShaderLoader(this._gl);
-		return shaderLoader.load(
-			this._resolve(vertexSourcePath), 
-			this._resolve(fragmentSourcePath)
-		);
 	}
 }

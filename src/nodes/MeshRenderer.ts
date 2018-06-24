@@ -1,10 +1,9 @@
-import GLBuffer from "../gl/GLBuffer";
 import { mat4 } from "gl-matrix";
+import DisplayObject from "./DisplayObject";
 import Mesh from "../renderer/mesh/Mesh";
 import Material from "../renderer/Material";
-import DisplayObject3D from "./DisplayObject3D";
 
-export default class MeshRenderer extends DisplayObject3D {
+export default class MeshRenderer extends DisplayObject {
 
 	private _gl: WebGL2RenderingContext;
 	private _mesh: Mesh;

@@ -1,22 +1,20 @@
 import GLTexture from "../gl/GLTexture";
-import GLShaderProgram from "../gl/GLShaderProgram";
+import GLShader from "../gl/GLShader";
 import { mat4 } from "gl-matrix";
 
 export default class Material {
-	public shader: GLShaderProgram;
+	public shader: GLShader;
 	public texture: GLTexture | null = null;
 
-	private _textureUniform: WebGLUniformLocation | null = null;
-	private _matrixUniform: WebGLUniformLocation | null = null;
+	private _textureUniform: WebGLUniformLocation | null;
+	private _matrixUniform: WebGLUniformLocation | null;
 
-	constructor(shader: GLShaderProgram) {
+	constructor(shader: GLShader) {
 		this.shader = shader;
 
 		this._matrixUniform = shader.getUniformLocation("u_matrix");
 		this._textureUniform = shader.getUniformLocation("u_texture");
 	}
-
-	public rotation: number = 0;
 
 	public use(gl: WebGL2RenderingContext, matrix: mat4) {
 		this.shader.use();

@@ -1,37 +1,54 @@
-import Stage3D from "../renderer/Stage3D";
-import TestModuleLoader from "../modules/TestModuleLoader";
 import ModuleLoader from "../modules/ModuleLoader";
 import Module from "../modules/Module";
+import TestModule2DLoader from "../modules/TestModule2DLoader";
+import Stage from "../renderer/Stage";
+import GLRasterizer from "../gl/GLRasterizer";
+import ShaderLoader from "../loading/ShaderLoader";
+import * as path from "path";
 
 export default class RendererWindow {
 
-	private _stage: Stage3D;
+	private _stage!: Stage;
 
-	private _canvas: HTMLCanvasElement;
+	private _canvas!: HTMLCanvasElement;
+
+	private _rasterizer!: GLRasterizer;
 
 	private _module!: Module;
 
 	private _timestamp: number = 0;
 
-	private _gl: WebGL2RenderingContext;
+	private _gl!: WebGL2RenderingContext;
 
 	constructor() {
-		this._canvas = document.createElement("canvas");
-		this._canvas.width = 480;
-		this._canvas.height = 320;
-		document.body.appendChild(this._canvas);
-		this._gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
-		this._stage = new Stage3D(this._gl);
+
+
+		
 	}
 
+
+
 	public async load() {
-		const moduleLoader: ModuleLoader = new TestModuleLoader(this._gl, this._stage);
+		this._canvas = this._createCanvas();
+		this._gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
+		const shaderLoader = new ShaderLoader(this._gl);
+		const defaultShader = await shaderLoader.load(
+			path.resolve(__dirname, "../../res/", "vertex.glsl"),
+			path.resolve(__dirname, "../../res/", "fragment.glsl"),
+		);
+
+		this._rasterizer = new GLRasterizer(this._gl, defaultShader);
+		this._rasterizer.init();
+
+		this._stage = new Stage(this._rasterizer, this._gl.canvas.width, this._gl.canvas.height);
+
+		const moduleLoader: ModuleLoader = new TestModule2DLoader(this._gl);
 		this._module = await moduleLoader.load(this._gl, this._stage);
 	}
 
 	public start() {
 		this._timestamp = Date.now();
-		this._render(this._timestamp);
+		this._render();
 	}
 
 	public static async main(): Promise<void> {
@@ -40,9 +57,16 @@ export default class RendererWindow {
 		window.start();
 	}
 
+	private _createCanvas(): HTMLCanvasElement {
+		const canvas = document.createElement("canvas");
+		canvas.width = 480;
+		canvas.height = 320;
+		document.body.appendChild(canvas);
+		return canvas;
+	}
 
-
-	private _render(timestamp: number) {
+	private _render() {
+		const timestamp = Date.now();
 		const deltaTime = (timestamp - this._timestamp) / 1000;
 		this._resize(this._canvas);
 		this._module.update(deltaTime);
@@ -63,6 +87,8 @@ export default class RendererWindow {
 			canvas.width = displayWidth;
 			canvas.height = displayHeight;
 		}
+
+		this._stage.setSize(canvas.width, canvas.height);
 	}
 
 }

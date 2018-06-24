@@ -2,7 +2,7 @@ import MeshRenderer from "../nodes/MeshRenderer";
 import GLTexture from "../gl/GLTexture";
 import Module from "./Module";
 
-export default class TestModule extends Module {
+export default class TestModule3D extends Module {
 	private _mesh: MeshRenderer;
 
 	private _video: HTMLVideoElement;
@@ -26,7 +26,6 @@ export default class TestModule extends Module {
 	}
 
 	public update(deltaTime: number) {
-		console.log(deltaTime)
 		if (this._canPlay) {
 			(this._mesh.material.texture as GLTexture).updateTexture(this._video);
 		}

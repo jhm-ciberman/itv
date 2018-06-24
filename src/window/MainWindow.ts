@@ -25,12 +25,10 @@ export default class MainWindow extends EventEmitter {
 			console.log("Window closed");
 			this.emit('closed');
 		});
-		this._win.webContents.on("console-message", 
-			(_level: number, _message: string, _line: number, _sourceId: string) => {
+		this._win.webContents.on("console-message", (_level: number, _message: string, line: number, _sourceId: string) => {
 				
-				console.log([...arguments].join(" "));
-			}
-		)
+			console.log(line); // its message! The typings.d.ts is bad! 
+		});
 	}
 }
 
