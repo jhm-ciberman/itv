@@ -14,6 +14,8 @@ precision mediump float;
 uniform sampler2D u_texture;
 `;
 
+const REGEX = /\[vertex]([.\s\S]*)\[fragment\]([.\s\S]*)/g;
+
 export default class GLShader {
 
 	public static readonly ATTR_POSITION = 0;
@@ -25,16 +27,16 @@ export default class GLShader {
 
 	private readonly _u_matrix: WebGLUniformLocation;
 	private readonly _u_texture: WebGLUniformLocation;
-	constructor(gl: WebGL2RenderingContext, vertexShaderSource: string, fragmentShaderSource: string) {
+	constructor(gl: WebGL2RenderingContext, shaderSource: string) {
 		this._gl = gl;
 
+		const r = REGEX.exec(shaderSource);
+		if (!r) {
+			throw new Error("The passed shader needs to have the [vertex] and [frament] tags in order");
+		}
 
-		vertexShaderSource = PREPEND_VERTEX + vertexShaderSource;
-		fragmentShaderSource = PREPEND_FRAGMENT + fragmentShaderSource;
-
-		const fragment = this._compileShaderSource(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-		const vertex = this._compileShaderSource(gl, gl.VERTEX_SHADER, vertexShaderSource);
-
+		const vertex = this._compileShaderSource(gl, gl.VERTEX_SHADER, PREPEND_VERTEX + r[1]);
+		const fragment = this._compileShaderSource(gl, gl.FRAGMENT_SHADER, PREPEND_FRAGMENT + r[2]);
 
 		this._program = gl.createProgram() as WebGLProgram;
 		this._gl.attachShader(this._program, vertex);

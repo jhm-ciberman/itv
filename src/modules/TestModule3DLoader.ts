@@ -26,8 +26,7 @@ export default class TestModule3DLoader extends ModuleLoader {
 		const mesh = new CubeMesh(gl);
 		const texture = new GLTexture(gl, image);
 		const renderer = new MeshRenderer(mesh, texture);
-		renderer.setScale(.5, .5, .5);
-		renderer.setPosition(0, 0, -10);
+		renderer.setPosition(0, 0, -5);
 
 
 		stage.rootNode = renderer;

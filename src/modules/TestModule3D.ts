@@ -27,7 +27,7 @@ export default class TestModule3D extends Module {
 
 	public update(deltaTime: number) {
 		if (this._canPlay) {
-			(this._mesh.texture as GLTexture).updateTexture(this._video);
+			//(this._mesh.texture as GLTexture).updateTexture(this._video);
 		}
 		//this._mesh.setScale(.5, .5, .5)
 		this._mesh.rotateY(10 * deltaTime).rotateZ(5 * deltaTime).rotateX(3 * deltaTime);

@@ -1,5 +1,6 @@
 import GLShader from "../gl/GLShader";
 import * as fse from "fs-extra";
+import * as path from "path";
 
 export default class ShaderLoader {
 
@@ -11,9 +12,9 @@ export default class ShaderLoader {
 
 	
 	
-	public async load(vertexPath: string, fragmentPath: string) {
-		const fragment = await fse.readFile(fragmentPath, "utf8");
-		const vertex = await fse.readFile(vertexPath, "utf8");
-		return new GLShader(this._gl, vertex, fragment);
+	public async load(shaderPath: string) {
+		shaderPath = path.resolve(__dirname, "../../res/", shaderPath);
+		const source = await fse.readFile(shaderPath, "utf8");
+		return new GLShader(this._gl, source);
 	}
 }

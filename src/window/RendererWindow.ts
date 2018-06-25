@@ -33,10 +33,7 @@ export default class RendererWindow {
 		this._canvas = this._createCanvas();
 		this._gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
 		const shaderLoader = new ShaderLoader(this._gl);
-		const defaultShader = await shaderLoader.load(
-			path.resolve(__dirname, "../../res/", "vertex.glsl"),
-			path.resolve(__dirname, "../../res/", "fragment.glsl"),
-		);
+		const defaultShader = await shaderLoader.load("standard.glsl");
 
 		this._rasterizer = new GLRasterizer(this._gl, defaultShader);
 		this._rasterizer.init();
