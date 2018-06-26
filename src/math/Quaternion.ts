@@ -29,8 +29,7 @@ export default class Quaternion {
 	}
 
 	public setLookRotation(target: Vector3, upVector: Vector3 = Vector3.UP): Quaternion {
-		const right = upVector.cross(target);
-		console.log(right);
+		const right = target.cross(upVector);
 		quat.setAxes(this._quat, target.rawData, right.rawData, upVector.rawData);
 		return this;
 	}

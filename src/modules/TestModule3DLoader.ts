@@ -14,27 +14,24 @@ export default class TestModule3DLoader extends ModuleLoader {
 
 
 	public async load(gl: WebGL2RenderingContext, stage: Stage): Promise<Module> {
-		const image = await this._loadImage("sonny.jpg");
+		const image1 = await this._loadImage("sonny.jpg");
+		const image2 = await this._loadImage("atm_cash.png");
 
 		const sprite = new Sprite();
 
-		sprite.setPosition(400, 300, 0);
-		sprite.setScale(400, 300, 1);
-		sprite.texture = new GLTexture(gl, image);
-
-
 
 		const mesh = new CubeMesh(gl);
-		const texture = new GLTexture(gl, image);
-		const renderer = new MeshRenderer(mesh, texture);
+		const texture1 = new GLTexture(gl, image1);
+		const texture2 = new GLTexture(gl, image2);
+		const renderer = new MeshRenderer(mesh, texture1);
 
 		renderer.setPosition(0, 0, -5);
 
 
-		const renderer2 = new MeshRenderer(mesh, texture);
+		const renderer2 = new MeshRenderer(mesh, texture2);
 		renderer2.setPosition(2, 0, -5);
 
-		const floor = new MeshRenderer(mesh, texture);
+		const floor = new MeshRenderer(mesh, texture1);
 		floor.setPosition(0, -2, 0).setScale(5, 1, 5);
 
 		const root = new DisplayObject();

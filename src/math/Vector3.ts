@@ -1,4 +1,5 @@
 import { vec3 } from "gl-matrix";
+import Quaternion from "./Quaternion";
 
 export default class Vector3 {
 
@@ -67,6 +68,18 @@ export default class Vector3 {
 	public substract(vector: Vector3): Vector3 {
 		const v = new Vector3();
 		vec3.subtract(v.rawData, this._value, vector.rawData);
+		return v;
+	}
+
+	public add(vector: Vector3): Vector3 {
+		const v = new Vector3();
+		vec3.add(v.rawData, this._value, vector.rawData);
+		return v;
+	}
+
+	public rotate(quat: Quaternion): Vector3 {
+		const v = new Vector3();
+		vec3.transformQuat(v.rawData, this._value, quat.rawData);
 		return v;
 	}
 
