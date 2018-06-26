@@ -1,10 +1,8 @@
 import ModuleLoader from "../modules/ModuleLoader";
 import Module from "../modules/Module";
-import TestModule2DLoader from "../modules/TestModule2DLoader";
 import Stage from "../renderer/Stage";
 import GLRasterizer from "../gl/GLRasterizer";
 import ShaderLoader from "../loading/ShaderLoader";
-import * as path from "path";
 import TestModule3DLoader from "../modules/TestModule3DLoader";
 
 export default class RendererWindow {
@@ -86,7 +84,7 @@ export default class RendererWindow {
 			canvas.height = displayHeight;
 		}
 
-		this._stage.setSize(canvas.width, canvas.height);
+		//this._stage.setSize(canvas.width, canvas.height);
 	}
 
 }

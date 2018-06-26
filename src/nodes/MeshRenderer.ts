@@ -1,4 +1,3 @@
-import { mat4 } from "gl-matrix";
 import DisplayObject from "./DisplayObject";
 import CubeMesh from "../renderer/mesh/CubeMesh";
 import GLRasterizer from "../gl/GLRasterizer";
@@ -15,9 +14,9 @@ export default class MeshRenderer extends DisplayObject {
 		this.texture = texture;
 	}
 
-	public render(rasterizer: GLRasterizer, matrix: mat4) {
+	public render(rasterizer: GLRasterizer) {
 		if (this.texture) {
-			rasterizer.drawMesh(this._mesh.mesh, matrix, this.texture);
+			rasterizer.drawMesh(this._mesh.mesh, this.texture);
 		}
 	}
 }

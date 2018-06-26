@@ -1,9 +1,8 @@
-import { mat4 } from "gl-matrix";
 import GLTexture from "../gl/GLTexture";
-import DisplayObject from "./DisplayObject";
 import GLRasterizer from "../gl/GLRasterizer";
+import DisplayObject2D from "./DisplayObject2D";
 
-export default class Sprite extends DisplayObject {
+export default class Sprite extends DisplayObject2D {
 
 	public texture: GLTexture | null = null;
 
@@ -11,9 +10,9 @@ export default class Sprite extends DisplayObject {
 		super();
 	}
 
-	public render(rasterizer: GLRasterizer, matrix: mat4) {
+	public render(rasterizer: GLRasterizer) {
 		if (this.texture) {
-			rasterizer.drawQuad(matrix, this.texture);
+			rasterizer.drawQuad(this.texture);
 		}
 	}
 }

@@ -3,7 +3,7 @@ import Sprite from "../nodes/Sprite";
 import GLTexture from "../gl/GLTexture";
 import TestModule2D from "./TestModule2D";
 import Stage from "../renderer/Stage";
-import OrthoProjection from "../renderer/projection/OrthoProjection";
+import OrthographicCamera from "../nodes/projection/OrthographicCamera";
 
 export default class TestModule2DLoader extends ModuleLoader {
 	public async load(gl: WebGL2RenderingContext, stage: Stage) {
@@ -14,7 +14,7 @@ export default class TestModule2DLoader extends ModuleLoader {
 		sprite.setScale(400, 300, 1);
 		sprite.texture = new GLTexture(gl, image);
 		stage.rootNode = sprite;
-		stage.projection = new OrthoProjection();
+		stage.camera = new OrthographicCamera(-400, 400, -300, 300);
 		return new TestModule2D(sprite);
 	}
 }

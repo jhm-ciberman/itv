@@ -33,14 +33,16 @@ export default class GLRasterizer {
 		this._currentShader = shader;
 	}
 
-	public drawQuad(matrix: mat4, texture: GLTexture) {
+	public setMatrix(matrix: mat4) {
 		this._currentShader.setMatrix(matrix);
+	}
+
+	public drawQuad(texture: GLTexture) {
 		this._currentShader.setTexture(texture);
 		this._quadMesh.drawCall();
 	}
 
-	public drawMesh(mesh: GLMesh, matrix: mat4, texture: GLTexture) {
-		this._currentShader.setMatrix(matrix);
+	public drawMesh(mesh: GLMesh, texture: GLTexture) {
 		this._currentShader.setTexture(texture);
 		mesh.drawCall();
 	}
