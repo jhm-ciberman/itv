@@ -5,9 +5,15 @@ export default class Vector3 {
 
 	static readonly ONE: Vector3 = new Vector3(1, 1, 1);
 	static readonly ZERO: Vector3 = new Vector3(0, 0, 0);
+
 	static readonly UP: Vector3 = new Vector3(0, 1, 0);
+	static readonly DOWN: Vector3 = new Vector3(0, -1, 0);
+
 	static readonly RIGHT: Vector3 = new Vector3(1, 0, 0);
+	static readonly LEFT: Vector3 = new Vector3(-1, 0, 0);
+
 	static readonly FORWARD: Vector3 = new Vector3(0, 0, 1);
+	static readonly BACKWARDS: Vector3 = new Vector3(0, 0, -1);
 
 	private _value: vec3;
 	constructor(x: number = 0, y: number = 0, z: number = 0) {
@@ -44,6 +50,10 @@ export default class Vector3 {
 
 	set z(value: number) {
 		this._value[2] = value;
+	}
+
+	public mul(numb: number): Vector3 {
+		return new Vector3(this._value[0] * numb, this._value[1] * numb, this._value[2] * numb);
 	}
 
 	public set(x: number, y:number, z?:number): Vector3 {

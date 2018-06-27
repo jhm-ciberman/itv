@@ -21,7 +21,10 @@ export default class OrthographicCamera extends Camera3D {
 	}
 
 	public updateProjectionMatrix(): void {
-		mat4.ortho(this.projectionMatrix, this._left, this._right, this._top, this._bottom, this._near, this._far);
+		mat4.ortho(this.projectionMatrix, this._left, this._right, -this._top, -this._bottom, this._near, this._far);
+		this.projectionMatrix[10] = -this.projectionMatrix[10];
+		this.projectionMatrix[11] = -this.projectionMatrix[11];
 	}
+
 
 }

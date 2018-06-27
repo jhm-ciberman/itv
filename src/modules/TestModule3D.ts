@@ -20,23 +20,26 @@ export default class TestModule3D extends Module {
 			
 			const speed = 0.1;
 			if (e.key === "w") {
-				this._camera.translate(0, 0, -speed);
+				this._camera.transform.move(Vector3.FORWARD.mul(speed));
 				//this._camera.transform.position = this._camera.transform.position.add(Vector3.FORWARD);
 			}
 			if (e.key === "s") {
-				this._camera.translate(0, 0, speed);
+				this._camera.transform.move(Vector3.BACKWARDS.mul(speed));
 				//this._camera.transform.position = this._camera.transform.position.substract(Vector3.FORWARD);
 			}
 			if (e.key === "a") {
-				this._camera.rotateY(10);
-			}
-			if (e.key === "d") {
+				//this._camera.transform.move(Vector3.LEFT.mul(speed));
 				this._camera.rotateY(-10);
 			}
-			if (e.key === " ") {
-				this._camera.lookAt(-10, 0, -10);
+			if (e.key === "d") {
+				//this._camera.transform.move(Vector3.RIGHT.mul(speed));
+				this._camera.rotateY(10);
 			}
-			console.log(this._camera.transform.position.toString());
+			if (e.key === " ") {
+				
+			}
+			//this._camera.transform.rotation = this._camera.transform.rotation.setEuler(new Vector3(0,90,0))
+			//this._camera.transform.lookAt(new Vector3(-10, 0, -10));
 		});
 	} 
 
@@ -61,6 +64,8 @@ export default class TestModule3D extends Module {
 		//const x = Math.cos(this._time);
 		//const z = Math.sin(this._time);
 		//this._camera.lookAt(0, 0, -10);
-		this._mesh.rotateX(10 * deltaTime).rotateZ(5 * deltaTime).rotateX(3 * deltaTime);
+		this._mesh.rotateX(10 * deltaTime)
+				.rotateZ(5 * deltaTime)
+				.rotateX(3 * deltaTime);
 	}
 }

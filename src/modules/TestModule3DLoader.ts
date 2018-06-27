@@ -7,7 +7,8 @@ import GLTexture from "../gl/GLTexture";
 import CubeMesh from "../renderer/mesh/CubeMesh";
 import Sprite from "../nodes/Sprite";
 import DisplayObject from "../nodes/DisplayObject";
-import PerspectiveCamera from "../nodes/projection/PerspectiveProjection";
+import PerspectiveCamera from "../nodes/projection/PerspectiveCamera";
+import OrthographicCamera from "../nodes/projection/OrthographicCamera";
 
 export default class TestModule3DLoader extends ModuleLoader {
 
@@ -19,17 +20,20 @@ export default class TestModule3DLoader extends ModuleLoader {
 
 		const sprite = new Sprite();
 
-
+		const s = 2;
 		const mesh = new CubeMesh(gl);
 		const texture1 = new GLTexture(gl, image1);
 		const texture2 = new GLTexture(gl, image2);
+		// Sonny
 		const renderer = new MeshRenderer(mesh, texture1);
+		renderer.setScale(s, s, s);
+		renderer.setPosition(0, 0, 10);
 
-		renderer.setPosition(0, 0, -5);
 
-
+		// Bill
 		const renderer2 = new MeshRenderer(mesh, texture2);
-		renderer2.setPosition(2, 0, -5);
+		renderer2.setScale(s,s,s);
+		renderer2.setPosition(2, 0, -10);
 
 		const floor = new MeshRenderer(mesh, texture1);
 		floor.setPosition(0, -2, 0).setScale(5, 1, 5);
@@ -42,6 +46,8 @@ export default class TestModule3DLoader extends ModuleLoader {
 		stage.rootNode = root;
 
 		const cam = new PerspectiveCamera(45, 800 / 600);
+		//const ss = 10;
+		//const cam = new OrthographicCamera(-ss, ss, ss, -ss, -100, 100);
 
 		stage.camera = cam;
 		return new TestModule(renderer, cam);

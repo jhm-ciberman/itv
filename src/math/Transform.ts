@@ -93,4 +93,27 @@ export default class Transform {
 		return this._dirtyWorldMatrix;
 	}
 
+
+	public move(direction: Vector3) {
+		const v = direction.rotate(this.rotation);
+		this.position = this.position.add(v);
+	}
+
+	public translate(delta: Vector3) {
+		this.position = this.position.add(delta);
+	}
+
+	// TODO: do not work :(
+	public lookAt(target: Vector3, vectorUp: Vector3 = Vector3.UP): this {
+		if (target.equals(this._position)) {
+			return this;
+		}
+
+		this.rotation = this.rotation.setLookRotation(target.substract(this.position));
+
+		return this;
+	}
+
+	
+
 }

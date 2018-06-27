@@ -14,9 +14,11 @@ export default abstract class Camera3D extends DisplayObject3D {
 			this.transform.updateWorldMatrix(false);
 		}
 		mat4.invert(this._inverseWorldMatrix, this.transform.lastComputedWorldMatrix);
+		//mat4.copy(this._inverseWorldMatrix, this.transform.lastComputedWorldMatrix);
 		return this._inverseWorldMatrix;
 	}
 
 	public abstract updateProjectionMatrix(): void;
+
 
 }

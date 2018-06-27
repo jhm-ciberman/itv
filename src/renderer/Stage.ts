@@ -44,12 +44,14 @@ export default class Stage {
 		this.rootNode.transform.updateWorldMatrix(false);
 
 		mat4.multiply(this._viewProjectionMatrix, this._camera.projectionMatrix, this._camera.inverseWorldMatrix);
-		//mat4.copy(this._viewProjectionMatrix, this._camera.projectionMatrix);
-		
+
 		this._rasterizer.beginFrame();
 		this._visitNode(this.rootNode, false);
 	}
-
+// 0.019999999552965164,0,0,0,
+// 0,0.019999999552965164,0,0,
+// 0,0,-0.040816325694322586,0,
+// 0,0,-1.040816307067871,1
 	private _visitNode(node: DisplayObject, dirty: boolean) {
 		mat4.multiply(this._renderMatrix, this._viewProjectionMatrix, node.transform.lastComputedWorldMatrix);
 		this._rasterizer.setMatrix(this._renderMatrix);
