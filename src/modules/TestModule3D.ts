@@ -8,8 +8,7 @@ export default class TestModule3D extends Module {
 	private _camera: Camera3D;
 
 	private _video: HTMLVideoElement;
-	private _canPlay: boolean = false;
-	private _time: number = 0;
+	//private _canPlay: boolean = false;
 	constructor(mesh: MeshRenderer, camera: Camera3D) {
 		super();
 		this._mesh = mesh;
@@ -49,21 +48,12 @@ export default class TestModule3D extends Module {
 		video.addEventListener("canplaythrough", () => {
 			this._video.play();
 			this._video.volume = 0;
-			this._canPlay = true;
+			//this._canPlay = true;
 		});
 		return video;
 	}
 
 	public update(deltaTime: number) {
-		this._time += deltaTime;
-		if (this._canPlay) {
-			//(this._mesh.texture as GLTexture).updateTexture(this._video);
-		}
-		//this._mesh.setScale(.5, .5, .5)
-		//this._camera.setPosition(Math.cos(this._time) * 2, 0, 0);
-		//const x = Math.cos(this._time);
-		//const z = Math.sin(this._time);
-		//this._camera.lookAt(0, 0, -10);
 		this._mesh.rotateX(10 * deltaTime)
 				.rotateZ(5 * deltaTime)
 				.rotateX(3 * deltaTime);

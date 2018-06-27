@@ -1,4 +1,4 @@
-type ImageSource = ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement;
+export type GLImageSource = ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement;
 
 export default class GLTexture {
 
@@ -6,7 +6,7 @@ export default class GLTexture {
 
 	private _gl: WebGL2RenderingContext;
 
-	constructor(gl: WebGL2RenderingContext, image: ImageSource) {
+	constructor(gl: WebGL2RenderingContext, image: GLImageSource) {
 		this._gl = gl;
 		this._texture = gl.createTexture() as WebGLTexture;
 		// make unit 0 the active texture uint
@@ -28,7 +28,7 @@ export default class GLTexture {
 	}
 
 
-	public updateTexture(image: ImageSource): void {
+	public updateTexture(image: GLImageSource): void {
 		const gl = this._gl;
 		gl.bindTexture(gl.TEXTURE_2D, this._texture);
 		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -43,5 +43,9 @@ export default class GLTexture {
 		// Bind the texture to texture unit 0
 		this._gl.activeTexture(this._gl.TEXTURE0 + textureUnit);
 		this._gl.bindTexture(this._gl.TEXTURE_2D, this._texture);
+	}
+
+	public free() {
+		this._gl.deleteTexture(this._texture);
 	}
 }

@@ -3,7 +3,6 @@ import Module from "../modules/Module";
 import Stage from "../renderer/Stage";
 import GLRasterizer from "../gl/GLRasterizer";
 import ShaderLoader from "../loading/ShaderLoader";
-import TestModule3DLoader from "../modules/TestModule3DLoader";
 import TestModule2DLoader from "../modules/TestModule2DLoader";
 
 export default class RendererWindow {

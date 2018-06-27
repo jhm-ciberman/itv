@@ -1,6 +1,6 @@
 import { mat4 } from "gl-matrix";
 import GLShader from "./GLShader";
-import GLTexture from "./GLTexture";
+import GLTexture, { GLImageSource } from "./GLTexture";
 import GLMesh from "./GLMesh";
 
 export default class GLRasterizer {
@@ -60,6 +60,10 @@ export default class GLRasterizer {
 		gl.clearDepth(1.0);                 // Clear everything
 		gl.enable(gl.DEPTH_TEST);           // Enable depth testing
 		gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+	}
+
+	public createTexture(image: GLImageSource) {
+		return new GLTexture(this._gl, image);
 	}
 
 }
