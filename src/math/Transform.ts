@@ -103,13 +103,12 @@ export default class Transform {
 		this.position = this.position.add(delta);
 	}
 
-	// TODO: do not work :(
-	public lookAt(target: Vector3, vectorUp: Vector3 = Vector3.UP): this {
+	public lookAt(target: Vector3, vectorForward: Vector3 = Vector3.FORWARD): this {
 		if (target.equals(this._position)) {
 			return this;
 		}
 
-		this.rotation = this.rotation.setLookRotation(target.substract(this.position));
+		this.rotation = this.rotation.setLookRotation(target.substract(this.position), vectorForward);
 
 		return this;
 	}

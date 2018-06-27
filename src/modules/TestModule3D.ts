@@ -28,18 +28,18 @@ export default class TestModule3D extends Module {
 				//this._camera.transform.position = this._camera.transform.position.substract(Vector3.FORWARD);
 			}
 			if (e.key === "a") {
-				//this._camera.transform.move(Vector3.LEFT.mul(speed));
-				this._camera.rotateY(-10);
+				this._camera.transform.move(Vector3.LEFT.mul(speed));
+				//this._camera.rotateY(-10);
 			}
 			if (e.key === "d") {
-				//this._camera.transform.move(Vector3.RIGHT.mul(speed));
-				this._camera.rotateY(10);
+				this._camera.transform.move(Vector3.RIGHT.mul(speed));
+				//this._camera.rotateY(10);
 			}
 			if (e.key === " ") {
 				
 			}
 			//this._camera.transform.rotation = this._camera.transform.rotation.setEuler(new Vector3(0,90,0))
-			//this._camera.transform.lookAt(new Vector3(-10, 0, -10));
+			this._camera.transform.lookAt(this._mesh.transform.position);
 		});
 	} 
 
