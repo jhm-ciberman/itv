@@ -8,7 +8,6 @@ import CubeMesh from "../renderer/mesh/CubeMesh";
 import Sprite from "../nodes/Sprite";
 import DisplayObject from "../nodes/DisplayObject";
 import PerspectiveCamera from "../nodes/projection/PerspectiveCamera";
-import OrthographicCamera from "../nodes/projection/OrthographicCamera";
 
 export default class TestModule3DLoader extends ModuleLoader {
 
@@ -45,7 +44,7 @@ export default class TestModule3DLoader extends ModuleLoader {
 
 		stage.rootNode = root;
 
-		const cam = new PerspectiveCamera(45, 800 / 600);
+		const cam = new PerspectiveCamera(45);
 		//const ss = 10;
 		//const cam = new OrthographicCamera(-ss, ss, ss, -ss, -100, 100);
 

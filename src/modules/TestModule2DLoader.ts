@@ -10,11 +10,14 @@ export default class TestModule2DLoader extends ModuleLoader {
 		const image = await this._loadImage("sonny.jpg");
 		const sprite = new Sprite();
 		
-		sprite.setPosition(400, 300, 0);
-		sprite.setScale(400, 300, 1);
+		sprite.setPosition(0, 0, 0);
+		sprite.setScale(500, 647, 1);
 		sprite.texture = new GLTexture(gl, image);
 		stage.rootNode = sprite;
-		stage.camera = new OrthographicCamera(-400, 400, -300, 300);
+
+		const cam = new OrthographicCamera(400);
+		cam.setPosition(0, 0, -1);
+		stage.camera = cam;
 		return new TestModule2D(sprite);
 	}
 }

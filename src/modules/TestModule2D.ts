@@ -11,10 +11,10 @@ export default class TestModule2D extends Module {
 	}
 
 	public update(deltaTime: number): void {
-		this._s += (10 * deltaTime);
-		this._sprite.setPosition(400, 300, 0);
-		this._sprite.setScale(this._s, this._s, 1);
-		this._sprite.rotateZ(10 * deltaTime);
+		//this._s += (10 * deltaTime);
+		//this._sprite.setPosition(400, 300, 0);
+		//this._sprite.setScale(this._s, this._s, 1);
+		//this._sprite.rotateZ(10 * deltaTime);
 	}
 
 }

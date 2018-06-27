@@ -3,6 +3,7 @@ import { mat4 } from "gl-matrix";
 import GLRasterizer from "../gl/GLRasterizer";
 import Camera from "../nodes/projection/Camera3D";
 import OrthographicCamera from "../nodes/projection/OrthographicCamera";
+import Vector3 from "../math/Vector3";
 
 export default class Stage {
 	
@@ -16,42 +17,43 @@ export default class Stage {
 
 	private _rasterizer: GLRasterizer;
 
+	private _projectionMatrix: mat4;
+
+	private _width: number;
+	private _height: number;
+
 	constructor(rasterizer: GLRasterizer, width: number, height: number) {
-		this._camera = new OrthographicCamera(-width/2, width/2, -height/2, height/2);
+		this._camera = new OrthographicCamera(height / 2);
+		this._camera.transform.position = new Vector3(0, 0, -10);
 		this._rasterizer = rasterizer;
 		this._viewProjectionMatrix = mat4.create();
 		this._renderMatrix = mat4.create();
-		//this._width = width;
-		//this._height = height;
-
-		//this.setSize(width, height);
+		this._projectionMatrix = this._camera.computeProjectionMatrix(width / height);
+		this._width = width;
+		this._height = height;
 	}
 
-	//public setSize(width: number, height: number) {
-		//this._width = width;
-		//this._height = height;
-		//const proj = this._camera.getMatrix(width, height);
-		//mat4.multiply(this._viewProjection, proj, this._view);
-	//}
+	public setSize(width: number, height: number) {
+		this._width = width;
+		this._height = height;
+		this._projectionMatrix = this._camera.computeProjectionMatrix(this._width / this._height);
+	}
 
 	public set camera(value: Camera) {
 		this._camera = value;
-		//this.setSize(this._width, this._height);
+		this._projectionMatrix = this._camera.computeProjectionMatrix(this._width / this._height);
 	}
 
 	public render() {
 		if (!this.rootNode) return;
 		this.rootNode.transform.updateWorldMatrix(false);
 
-		mat4.multiply(this._viewProjectionMatrix, this._camera.projectionMatrix, this._camera.inverseWorldMatrix);
+		mat4.multiply(this._viewProjectionMatrix, this._projectionMatrix, this._camera.inverseWorldMatrix);
 
 		this._rasterizer.beginFrame();
 		this._visitNode(this.rootNode, false);
 	}
-// 0.019999999552965164,0,0,0,
-// 0,0.019999999552965164,0,0,
-// 0,0,-0.040816325694322586,0,
-// 0,0,-1.040816307067871,1
+
 	private _visitNode(node: DisplayObject, dirty: boolean) {
 		mat4.multiply(this._renderMatrix, this._viewProjectionMatrix, node.transform.lastComputedWorldMatrix);
 		this._rasterizer.setMatrix(this._renderMatrix);

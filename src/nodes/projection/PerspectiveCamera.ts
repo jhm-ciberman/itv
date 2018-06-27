@@ -5,25 +5,30 @@ export default class PerspectiveCamera extends Camera3D {
 
 	private _fov: number;
 
-	private _aspect: number;
+	private _pixelAspect: number;
 
 	private _near: number;
 
 	private _far: number;
 
-	constructor(fov: number, aspect : number, near: number = 0.1, far: number = 2000) {
+	constructor(fov: number, pixelAspect : number = 1, near: number = 0.1, far: number = 2000) {
 		super();
 		this._fov = fov;
-		this._aspect = aspect;
+		this._pixelAspect = pixelAspect;
 		this._near = near;
 		this._far = far;
-		this.updateProjectionMatrix();
 	}
 
-	public updateProjectionMatrix(): void {
-		mat4.perspective(this.projectionMatrix, this._fov * Math.PI / 180, this._aspect, this._near, this._far);
-		this.projectionMatrix[10] = -this.projectionMatrix[10];
-		this.projectionMatrix[11] = -this.projectionMatrix[11];
+	public computeProjectionMatrix(aspect: number): mat4 {
+		mat4.perspective(this._projectionMatrix, 
+			this._fov * Math.PI / 180, 
+			this._pixelAspect * aspect, 
+			this._near, 
+			this._far
+		);
+		this._projectionMatrix[10] = -this._projectionMatrix[10];
+		this._projectionMatrix[11] = -this._projectionMatrix[11];
+		return this._projectionMatrix;
 	}
 
 }

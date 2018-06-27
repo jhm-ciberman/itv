@@ -4,7 +4,7 @@ import DisplayObject3D from "../DisplayObject3D";
 export default abstract class Camera3D extends DisplayObject3D {
 
 	private readonly _inverseWorldMatrix: mat4 = mat4.create();
-	public readonly projectionMatrix: mat4 = mat4.create();
+	protected readonly _projectionMatrix: mat4 = mat4.create();
 	constructor() {
 		super();
 	}
@@ -18,7 +18,7 @@ export default abstract class Camera3D extends DisplayObject3D {
 		return this._inverseWorldMatrix;
 	}
 
-	public abstract updateProjectionMatrix(): void;
+	public abstract computeProjectionMatrix(aspect: number): mat4;
 
 
 }
