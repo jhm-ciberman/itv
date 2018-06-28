@@ -3,13 +3,17 @@ import Module from "../modules/Module";
 import Stage from "../renderer/Stage";
 import GLRasterizer from "../gl/GLRasterizer";
 import ShaderLoader from "../loading/ShaderLoader";
-import TestModule2DLoader from "../modules/TestModule2DLoader";
+import TestModule3DLoader from "../modules/TestModule3DLoader";
+import LocalPeerConnection from "../rtc/LocalPeerConnection";
+
+
 
 export default class RendererWindow {
 
 	private _stage!: Stage;
 
 	private _canvas!: HTMLCanvasElement;
+	private _canvas2!: HTMLCanvasElement;
 
 	private _rasterizer!: GLRasterizer;
 
@@ -19,6 +23,7 @@ export default class RendererWindow {
 
 	private _gl!: WebGL2RenderingContext;
 
+	private _ctx!: CanvasRenderingContext2D;
 	constructor() {
 
 
@@ -29,6 +34,10 @@ export default class RendererWindow {
 
 	public async load() {
 		this._canvas = this._createCanvas();
+		//await LocalPeerConnection.createConnection(this._canvas);
+
+		this._openWindow();
+
 		this._gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
 		const shaderLoader = new ShaderLoader(this._gl);
 		const defaultShader = await shaderLoader.load("standard.glsl");
@@ -38,11 +47,12 @@ export default class RendererWindow {
 
 		this._stage = new Stage(this._rasterizer, this._gl.canvas.width, this._gl.canvas.height);
 
-		const moduleLoader: ModuleLoader = new TestModule2DLoader();
+		const moduleLoader: ModuleLoader = new TestModule3DLoader();
 		this._module = await moduleLoader.load(this._gl, this._stage);
 	}
 
 	public start() {
+		//this._openWindow();
 		this._timestamp = Date.now();
 		this._render();
 	}
@@ -53,10 +63,10 @@ export default class RendererWindow {
 		window.start();
 	}
 
+
+
 	private _createCanvas(): HTMLCanvasElement {
 		const canvas = document.createElement("canvas");
-		canvas.width = 480;
-		canvas.height = 320;
 		document.body.appendChild(canvas);
 		return canvas;
 	}
@@ -66,7 +76,10 @@ export default class RendererWindow {
 		const deltaTime = (timestamp - this._timestamp) / 1000;
 		this._resize(this._canvas);
 		this._module.update(deltaTime);
+		
 		this._stage.render();
+		this._ctx.drawImage(this._canvas, 0, 0);
+
 		this._timestamp = timestamp;
 		window.requestAnimationFrame(this._render.bind(this));
 	}
@@ -84,7 +97,27 @@ export default class RendererWindow {
 			canvas.height = displayHeight;
 		}
 
+		if (this._canvas2) {
+			this._canvas2.width = this._canvas.width;
+			this._canvas2.height = this._canvas.height;
+		}
+
 		this._stage.setSize(canvas.width, canvas.height);
+	}
+
+
+	private _openWindow() {
+		const w = window.open("other.html") as Window;
+		w.addEventListener("load", () => {
+			console.log("LOADED");
+			//const v = w.document.getElementById("video") as HTMLVideoElement;
+			this._canvas2 = w.document.getElementById("canvas") as HTMLCanvasElement;
+			this._ctx = this._canvas2.getContext("2d") as CanvasRenderingContext2D;
+			
+			//const stream = this._canvas.captureStream(60);
+			//v.src = window.URL.createObjectURL(stream);
+			//v.play();
+		});
 	}
 
 }

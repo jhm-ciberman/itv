@@ -1,4 +1,3 @@
-import GLTexture from "../gl/GLTexture";
 import GLRasterizer from "../gl/GLRasterizer";
 import DisplayObject2D from "./DisplayObject2D";
 import Texture from "../renderer/Texture";

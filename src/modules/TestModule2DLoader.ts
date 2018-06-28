@@ -6,7 +6,7 @@ import OrthographicCamera from "../nodes/projection/OrthographicCamera";
 import Texture from "../renderer/Texture";
 
 export default class TestModule2DLoader extends ModuleLoader {
-	public async load(gl: WebGL2RenderingContext, stage: Stage) {
+	public async load(_gl: WebGL2RenderingContext, stage: Stage) {
 		const image = await this._loadImage("sonny.jpg");
 		const sprite = new Sprite();
 		sprite.setPosition(0, 0, 0);

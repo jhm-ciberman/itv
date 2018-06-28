@@ -1,7 +1,6 @@
 import DisplayObject from "./DisplayObject";
 import CubeMesh from "../renderer/mesh/CubeMesh";
 import GLRasterizer from "../gl/GLRasterizer";
-import GLTexture from "../gl/GLTexture";
 import Texture from "../renderer/Texture";
 
 export default class MeshRenderer extends DisplayObject {
