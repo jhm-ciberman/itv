@@ -76,9 +76,6 @@ export default class App {
 			show: false,
 			webPreferences: {
 				nativeWindowOpen: true,
-				experimentalCanvasFeatures: false,
-				experimentalFeatures: true,
-				webSecurity: true,
 			}
 		});
 

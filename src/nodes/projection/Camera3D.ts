@@ -18,7 +18,7 @@ export default abstract class Camera3D extends DisplayObject3D {
 		return this._inverseWorldMatrix;
 	}
 
-	public abstract computeProjectionMatrix(aspect: number): mat4;
+	public abstract computeProjectionMatrix(matrix: mat4, aspect: number): void;
 
 
 }

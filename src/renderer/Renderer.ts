@@ -26,16 +26,21 @@ export default class Renderer {
 		this._rasterizer.init();
 	}
 
-	public render(viewport: Viewport) {
+	public render(viewports: Viewport[]) {
 		this._rasterizer.beginFrame();
-		if (!viewport.rootNode) return;
 
-		viewport.rootNode.transform.updateWorldMatrix(false);
+		for (let i = 0; i < viewports.length; i++) {
+			const viewport = viewports[i];
 
-		mat4.multiply(this._viewProjectionMatrix, viewport.projectionMatrix, viewport.camera.inverseWorldMatrix);
+			if (!viewport.rootNode) {
+				continue;
+			}
 
+			viewport.rootNode.transform.updateWorldMatrix(false);
 
-		this._visitNode(viewport.rootNode, false);
+			mat4.multiply(this._viewProjectionMatrix, viewport.projectionMatrix, viewport.camera.inverseWorldMatrix);
+			this._visitNode(viewport.rootNode, false);
+		}
 	}
 
 	private _visitNode(node: DisplayObject, dirty: boolean) {

@@ -6,6 +6,8 @@ import ShaderLoader from "../resources/ShaderLoader";
 import Shader from "../resources/Shader";
 import Viewport from "./Viewport";
 import { ScreenManager } from "./ScreenManager";
+import OrthographicCamera from "../nodes/projection/OrthographicCamera";
+import Vector3 from "../math/Vector3";
 
 export default class RendererWindow {
 
@@ -13,20 +15,28 @@ export default class RendererWindow {
 	private _screenManager: ScreenManager;
 	private _canvas: HTMLCanvasElement;
 	private _timestamp: number = 0;
-	private _viewport: Viewport;
+	private _viewports: Viewport[] = [];
 
 	private _module!: Module;
 
 	constructor(defaultShader: Shader) {
-		this._canvas = this._createCanvas();
+		this._canvas = document.createElement("canvas");
+		document.body.appendChild(this._canvas);
 		this._renderer = new Renderer(this._canvas, defaultShader);
-		this._viewport = new Viewport(this._canvas.width, this._canvas.height);
+
+		const cam = new OrthographicCamera(this._canvas.height / 2);
+		cam.transform.position = new Vector3(0, 0, -10);
+		
+		const vp = new Viewport(this._canvas.width, this._canvas.height, cam);
+		this._viewports.push(vp);
+	
+
 		this._screenManager = new ScreenManager();
 	}
 
 	public async load() {
 		const moduleLoader: ModuleLoader = new TestModule3DLoader();
-		this._module = await moduleLoader.load(this._viewport);
+		this._module = await moduleLoader.load(this._viewports[0]);
 		await this._screenManager.init();
 	}
 
@@ -44,26 +54,18 @@ export default class RendererWindow {
 		window.start();
 	}
 
-
-
-	private _createCanvas(): HTMLCanvasElement {
-		const canvas = document.createElement("canvas");
-		document.body.appendChild(canvas);
-		return canvas;
-	}
-
 	private _render() {
 		const timestamp = Date.now();
 		const deltaTime = (timestamp - this._timestamp) / 1000;
 		this._resize(this._canvas);
 		this._module.update(deltaTime);
 		
-		this._renderer.render(this._viewport);
+		this._renderer.render(this._viewports);
 		this._screenManager.showCanvas(this._canvas);
 
 
 		this._timestamp = timestamp;
-		window.requestAnimationFrame(this._render.bind(this));
+		window.requestAnimationFrame(() => this._render());
 	}
 
 	private _resize(canvas: HTMLCanvasElement) {
@@ -77,10 +79,12 @@ export default class RendererWindow {
 			// Make the canvas the same size
 			canvas.width = displayWidth;
 			canvas.height = displayHeight;
+
+			this._screenManager.resize(canvas.width, canvas.height)
+			this._viewports[0].setSize(canvas.width, canvas.height);
 		}
 
-		this._screenManager.resize(canvas.width, canvas.height)
-		this._viewport.setSize(canvas.width, canvas.height);
+
 	}
 }
 

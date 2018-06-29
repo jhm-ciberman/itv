@@ -13,8 +13,8 @@ export default class OrthographicCamera extends Camera3D {
 		this._far = far; 
 	}
 
-	public computeProjectionMatrix(aspect: number): mat4 {
-		mat4.ortho(this._projectionMatrix, 
+	public computeProjectionMatrix(matrix: mat4, aspect: number): void {
+		mat4.ortho(matrix, 
 			-this._size * aspect, 
 			this._size * aspect, 
 			this._size, 
@@ -22,9 +22,8 @@ export default class OrthographicCamera extends Camera3D {
 			this._near, 
 			this._far
 		);
-		this._projectionMatrix[10] = -this._projectionMatrix[10];
-		this._projectionMatrix[11] = -this._projectionMatrix[11];
-		return this._projectionMatrix;
+		matrix[10] = -matrix[10];
+		matrix[11] = -matrix[11];
 	}
 
 
