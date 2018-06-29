@@ -12,7 +12,9 @@ export default class Sprite extends DisplayObject2D {
 
 	public render(rasterizer: GLRasterizer) {
 		if (this.texture) {
-			rasterizer.drawQuad(this.texture);
+			rasterizer.drawQuad(
+				this.texture.getRawResource(rasterizer)
+			);
 		}
 	}
 }

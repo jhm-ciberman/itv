@@ -5,15 +5,13 @@ import GLMesh from "./GLMesh";
 import GLIndexedMesh from "./GLIndexedMesh";
 import { GLRasterizerDrawMode } from "./GLRasterizerDrawMode";
 import Shader from "../../resources/Shader";
-import Texture from "../../resources/Texture";
-import Mesh from "../../resources/Mesh";
-
 
 export default class GLRasterizer {
 
 	private _gl: WebGL2RenderingContext; 
 
 	private _quadMesh: GLMesh;
+	private _fullscreenQuadMesh: GLMesh;
 
 	private _defaultShader: GLShader;
 
@@ -30,6 +28,14 @@ export default class GLRasterizer {
 			+.50, +.50, 0, 1, 1,	
 		]), 4, gl.TRIANGLE_STRIP);
 
+		this._fullscreenQuadMesh = new GLMesh(gl, new Float32Array([
+			// x , y,  z,  u, v
+			-1, -1, 0, 0, 0,
+			+1, -1, 0, 1, 0,
+			-1, +1, 0, 0, 1,
+			+1, +1, 0, 1, 1,
+		]), 4, gl.TRIANGLE_STRIP);
+
 		this._drawModes[GLRasterizerDrawMode.TRIANGLES] = this._gl.TRIANGLES;
 		this._drawModes[GLRasterizerDrawMode.TRIANGLE_STRIP] = this._gl.TRIANGLE_STRIP;
 		this._drawModes[GLRasterizerDrawMode.TRIANGLE_FAN] = this._gl.TRIANGLE_FAN;
@@ -40,22 +46,28 @@ export default class GLRasterizer {
 		this._currentShader.use();
 	}
 
-	public setShader(shader: Shader) {
-		this._currentShader = shader.getRawResource(this);
+	public setShader(shader: GLShader) {
+		this._currentShader = shader;
+		this._currentShader.use();
 	}
 
 	public setMatrix(matrix: mat4) {
 		this._currentShader.setMatrix(matrix);
 	}
 
-	public drawQuad(texture: Texture) {
-		this._currentShader.setTexture(texture.getRawResource(this));
+	public drawQuad(texture: GLTexture) {
+		this._currentShader.setTexture(texture);
 		this._quadMesh.drawCall();
 	}
 
-	public drawMesh(mesh: Mesh, texture: Texture) {
-		this._currentShader.setTexture(texture.getRawResource(this));
-		mesh.getRawResource(this).drawCall();
+	public drawFullscreenQuad(texture: GLTexture) {
+		this._currentShader.setTexture(texture);
+		this._fullscreenQuadMesh.drawCall();
+	}
+
+	public drawMesh(mesh: GLMesh, texture: GLTexture) {
+		this._currentShader.setTexture(texture);
+		mesh.drawCall();
 	}
 
 	public beginFrame() {
@@ -77,8 +89,8 @@ export default class GLRasterizer {
 		return new GLTexture(this._gl, image);
 	}
 
-	public createShader(shaderSource: string) {
-		return new GLShader(this._gl, shaderSource);
+	public createShader(vertexSource: string, fragmentSource: string) {
+		return new GLShader(this._gl, vertexSource, fragmentSource);
 	}
 
 	public createMesh(data: Float32Array, vertexCount: number, drawMode: GLRasterizerDrawMode) {

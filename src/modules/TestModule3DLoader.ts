@@ -2,17 +2,16 @@ import ModuleLoader from "./ModuleLoader";
 import Module from "./Module";
 import TestModule from "./TestModule3D";
 import MeshRenderer from "../nodes/MeshRenderer";
-import DisplayObject from "../nodes/DisplayObject";
 import PerspectiveCamera from "../nodes/projection/PerspectiveCamera";
 import Texture from "../resources/Texture";
 import CubeMesh from "../resources/CubeMesh";
-import Scene from "../window/Viewport";
+import Viewport from "../window/Viewport";
 
 export default class TestModule3DLoader extends ModuleLoader {
 
 
 
-	public async load(stage: Scene): Promise<Module> {
+	public async load(viewport: Viewport): Promise<Module> {
 		const image1 = await this._loadImage("sonny.jpg");
 		const image2 = await this._loadImage("atm_cash.png");
 
@@ -34,18 +33,15 @@ export default class TestModule3DLoader extends ModuleLoader {
 		const floor = new MeshRenderer(mesh, texture1);
 		floor.setPosition(0, -2, 0).setScale(5, 1, 5);
 
-		const root = new DisplayObject();
-		root.addChild(renderer);
-		root.addChild(renderer2);
-		root.addChild(floor);
-
-		stage.rootNode = root;
+		viewport.scene.addChild(renderer);
+		viewport.scene.addChild(renderer2);
+		viewport.scene.addChild(floor);
 
 		const cam = new PerspectiveCamera(45);
 		//const ss = 10;
 		//const cam = new OrthographicCamera(-ss, ss, ss, -ss, -100, 100);
 
-		stage.camera = cam;
+		viewport.camera = cam;
 		return new TestModule(renderer, cam);
 
 

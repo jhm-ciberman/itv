@@ -14,6 +14,8 @@ export default class Renderer {
 
 	private _rasterizer: GLRasterizer;
 
+	private _viewports: Set<Viewport> = new Set();
+
 	constructor(canvas: HTMLCanvasElement, defaultShader: Shader) {
 
 		const gl = canvas.getContext("webgl2") as WebGL2RenderingContext;
@@ -26,20 +28,31 @@ export default class Renderer {
 		this._rasterizer.init();
 	}
 
-	public render(viewports: Viewport[]) {
+	public addViewport(viewport: Viewport) {
+		this._viewports.add(viewport);
+	}
+
+	public removeViewport(viewport: Viewport) {
+		this._viewports.delete(viewport);
+	}
+
+	public get viewports(): IterableIterator<Viewport> {
+		return this._viewports.keys();
+	}
+
+	public render() {
 		this._rasterizer.beginFrame();
 
-		for (let i = 0; i < viewports.length; i++) {
-			const viewport = viewports[i];
+		for (const viewport of this._viewports) {
 
-			if (!viewport.rootNode) {
+			if (!viewport.scene) {
 				continue;
 			}
 
-			viewport.rootNode.transform.updateWorldMatrix(false);
+			viewport.scene.transform.updateWorldMatrix(false);
 
 			mat4.multiply(this._viewProjectionMatrix, viewport.projectionMatrix, viewport.camera.inverseWorldMatrix);
-			this._visitNode(viewport.rootNode, false);
+			this._visitNode(viewport.scene, false);
 		}
 	}
 

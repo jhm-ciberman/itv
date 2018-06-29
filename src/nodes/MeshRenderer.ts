@@ -15,6 +15,9 @@ export default class MeshRenderer extends DisplayObject {
 	}
 
 	public render(rasterizer: GLRasterizer) {
-		rasterizer.drawMesh(this._mesh, this.texture);
+		rasterizer.drawMesh(
+			this._mesh.getRawResource(rasterizer), 
+			this.texture.getRawResource(rasterizer)
+		);
 	}
 }

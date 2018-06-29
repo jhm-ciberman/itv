@@ -1,10 +1,8 @@
-import DisplayObject from "../nodes/DisplayObject";
 import Camera3D from "../nodes/projection/Camera3D";
 import { mat4 } from "gl-matrix";
+import Scene from "../nodes/Scene";
 
 export default class Viewport {
-
-	public rootNode: DisplayObject | null = null;
 
 	private _camera: Camera3D;
 	public readonly projectionMatrix: mat4 = mat4.create();
@@ -12,10 +10,13 @@ export default class Viewport {
 	private _width: number;
 	private _height: number;
 
-	constructor(width: number, height: number, camera: Camera3D) {
+	private _scene: Scene;
+
+	constructor(width: number, height: number, camera: Camera3D, scene: Scene) {
 		this._width = width;
 		this._height = height;
 		this._camera = camera;
+		this._scene = scene;
 		this._updateMatrix();
 	}
 
@@ -32,6 +33,14 @@ export default class Viewport {
 
 	public get camera(): Camera3D {
 		return this._camera;
+	}
+
+	public attachScene(scene: Scene) {
+		this._scene = scene;
+	}
+
+	public get scene(): Scene {
+		return this._scene;
 	}
 
 	private _updateMatrix() {

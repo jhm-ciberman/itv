@@ -8,6 +8,7 @@ import Viewport from "./Viewport";
 import { ScreenManager } from "./ScreenManager";
 import OrthographicCamera from "../nodes/projection/OrthographicCamera";
 import Vector3 from "../math/Vector3";
+import Scene from "../nodes/Scene";
 
 export default class RendererWindow {
 
@@ -15,9 +16,9 @@ export default class RendererWindow {
 	private _screenManager: ScreenManager;
 	private _canvas: HTMLCanvasElement;
 	private _timestamp: number = 0;
-	private _viewports: Viewport[] = [];
-
 	private _module!: Module;
+	private _viewport: Viewport;
+	private _scene: Scene;
 
 	constructor(defaultShader: Shader) {
 		this._canvas = document.createElement("canvas");
@@ -27,16 +28,18 @@ export default class RendererWindow {
 		const cam = new OrthographicCamera(this._canvas.height / 2);
 		cam.transform.position = new Vector3(0, 0, -10);
 		
-		const vp = new Viewport(this._canvas.width, this._canvas.height, cam);
-		this._viewports.push(vp);
+		this._scene = new Scene();
+
+		this._viewport = new Viewport(this._canvas.width, this._canvas.height, cam, this._scene);
+		this._renderer.addViewport(this._viewport);
 	
 
-		this._screenManager = new ScreenManager();
+		this._screenManager = new ScreenManager(defaultShader);
 	}
 
 	public async load() {
 		const moduleLoader: ModuleLoader = new TestModule3DLoader();
-		this._module = await moduleLoader.load(this._viewports[0]);
+		this._module = await moduleLoader.load(this._viewport);
 		await this._screenManager.init();
 	}
 
@@ -59,8 +62,7 @@ export default class RendererWindow {
 		const deltaTime = (timestamp - this._timestamp) / 1000;
 		this._resize(this._canvas);
 		this._module.update(deltaTime);
-		
-		this._renderer.render(this._viewports);
+		this._renderer.render();
 		this._screenManager.showCanvas(this._canvas);
 
 
@@ -81,10 +83,8 @@ export default class RendererWindow {
 			canvas.height = displayHeight;
 
 			this._screenManager.resize(canvas.width, canvas.height)
-			this._viewports[0].setSize(canvas.width, canvas.height);
+			this._viewport.setSize(canvas.width, canvas.height);
 		}
-
-
 	}
 }
 

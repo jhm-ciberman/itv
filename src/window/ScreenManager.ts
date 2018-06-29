@@ -1,8 +1,15 @@
 import { SlaveWindow } from "./SlaveWindow";
+import Shader from "../resources/Shader";
 
 export class ScreenManager {
 
 	private _slave: SlaveWindow | null = null;
+
+	private _defaultShader: Shader;
+
+	constructor(defaultShader: Shader) {
+		this._defaultShader = defaultShader;
+	}
 
 	public async init(): Promise<void> {
 		this._slave = await this._openWindow();
@@ -12,7 +19,7 @@ export class ScreenManager {
 		return new Promise((resolve) => {
 			const newWindow = window.open("other.html") as Window;
 			newWindow.addEventListener("load", () => {
-				resolve(new SlaveWindow(newWindow));
+				resolve(new SlaveWindow(newWindow, this._defaultShader));
 			});
 		});
 	}
@@ -28,4 +35,5 @@ export class ScreenManager {
 			this._slave.resize(width, height);
 		}
 	}
+
 }
