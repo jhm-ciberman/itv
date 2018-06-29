@@ -1,7 +1,7 @@
 import DisplayObject from "./DisplayObject";
-import CubeMesh from "../renderer/mesh/CubeMesh";
-import GLRasterizer from "../gl/GLRasterizer";
-import Texture from "../renderer/Texture";
+import CubeMesh from "../resources/CubeMesh";
+import GLRasterizer from "../renderer/gl/GLRasterizer";
+import Texture from "../resources/Texture";
 
 export default class MeshRenderer extends DisplayObject {
 
@@ -15,8 +15,6 @@ export default class MeshRenderer extends DisplayObject {
 	}
 
 	public render(rasterizer: GLRasterizer) {
-		if (this.texture) {
-			rasterizer.drawMesh(this._mesh.mesh, this.texture.getTextureForRasterizer(rasterizer));
-		}
+		rasterizer.drawMesh(this._mesh, this.texture);
 	}
 }

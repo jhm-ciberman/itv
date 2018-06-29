@@ -1,23 +1,23 @@
 import ModuleLoader from "./ModuleLoader";
 import Module from "./Module";
 import TestModule from "./TestModule3D";
-import Stage from "../renderer/Stage";
+import Renderer from "../renderer/Renderer";
 import MeshRenderer from "../nodes/MeshRenderer";
-import CubeMesh from "../renderer/mesh/CubeMesh";
 import DisplayObject from "../nodes/DisplayObject";
 import PerspectiveCamera from "../nodes/projection/PerspectiveCamera";
-import Texture from "../renderer/Texture";
+import Texture from "../resources/Texture";
+import CubeMesh from "../resources/CubeMesh";
 
 export default class TestModule3DLoader extends ModuleLoader {
 
 
 
-	public async load(gl: WebGL2RenderingContext, stage: Stage): Promise<Module> {
+	public async load(stage: Renderer): Promise<Module> {
 		const image1 = await this._loadImage("sonny.jpg");
 		const image2 = await this._loadImage("atm_cash.png");
 
 		const s = 2;
-		const mesh = new CubeMesh(gl);
+		const mesh = new CubeMesh();
 		const texture1 = new Texture(image1);
 		const texture2 = new Texture(image2);
 		// Sonny

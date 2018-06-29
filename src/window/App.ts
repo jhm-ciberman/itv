@@ -76,7 +76,9 @@ export default class App {
 			show: false,
 			webPreferences: {
 				nativeWindowOpen: true,
-				webSecurity: false,
+				experimentalCanvasFeatures: false,
+				experimentalFeatures: true,
+				webSecurity: true,
 			}
 		});
 
@@ -90,7 +92,7 @@ export default class App {
 		win.once('ready-to-show', () => {
 			//win.show();
 		});
-		win.webContents.on("console-message", (_level: number, _message: string, line: number, _sourceId: string) => {
+		win.webContents.on("console-message" as any, (_level: number, _message: string, line: number, _sourceId: string) => {
 
 			console.log(line); // its message! The typings.d.ts is bad! 
 		});

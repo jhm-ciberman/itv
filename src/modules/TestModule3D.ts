@@ -7,12 +7,12 @@ export default class TestModule3D extends Module {
 	private _mesh: MeshRenderer;
 	private _camera: Camera3D;
 
-	private _video: HTMLVideoElement;
+	//private _video: HTMLVideoElement;
 	//private _canPlay: boolean = false;
 	constructor(mesh: MeshRenderer, camera: Camera3D) {
 		super();
 		this._mesh = mesh;
-		this._video = this._createVideo();
+		//this._video = this._createVideo();
 		this._camera = camera;
 
 		document.addEventListener("keydown", (e) => {
@@ -42,6 +42,7 @@ export default class TestModule3D extends Module {
 		});
 	} 
 
+	/*
 	private _createVideo(): HTMLVideoElement {
 		const video = document.createElement("video");
 		video.src = "https://mdn.github.io/webgl-examples/tutorial/sample8/Firefox.mp4";
@@ -52,7 +53,7 @@ export default class TestModule3D extends Module {
 		});
 		return video;
 	}
-
+	*/
 	public update(deltaTime: number) {
 		this._mesh.rotateX(10 * deltaTime)
 				.rotateZ(5 * deltaTime)

@@ -1,6 +1,6 @@
 import Module from "./Module";
 import * as path from "path";
-import Stage from "../renderer/Stage";
+import Renderer from "../renderer/Renderer";
 
 export default abstract class ModuleLoader {
 
@@ -11,7 +11,7 @@ export default abstract class ModuleLoader {
 	
 
 	// TODO: remove this gl argument
-	public abstract async load(gl: WebGL2RenderingContext, stage: Stage): Promise<Module>;
+	public abstract async load(stage: Renderer): Promise<Module>;
 
 	protected async _loadImage(src: string): Promise<HTMLImageElement> {
 		return new Promise<HTMLImageElement>((resolve) => {

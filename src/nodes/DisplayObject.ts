@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import GLRasterizer from "../gl/GLRasterizer";
+import GLRasterizer from "../renderer/gl/GLRasterizer";
 import Transform from "../math/Transform";
 
 

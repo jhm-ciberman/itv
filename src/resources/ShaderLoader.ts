@@ -1,20 +1,11 @@
-import GLShader from "../gl/GLShader";
 import * as fse from "fs-extra";
 import * as path from "path";
+import Shader from "./Shader";
 
 export default class ShaderLoader {
-
-	private _gl: WebGL2RenderingContext;
-
-	constructor(gl: WebGL2RenderingContext) {
-		this._gl = gl;
-	}
-
-	
-	
 	public async load(shaderPath: string) {
 		shaderPath = path.resolve(__dirname, "../../res/", shaderPath);
 		const source = await fse.readFile(shaderPath, "utf8");
-		return new GLShader(this._gl, source);
+		return new Shader(source);
 	}
 }

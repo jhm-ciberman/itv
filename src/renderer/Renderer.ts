@@ -1,11 +1,12 @@
 import DisplayObject from "../nodes/DisplayObject";
 import { mat4 } from "gl-matrix";
-import GLRasterizer from "../gl/GLRasterizer";
+import GLRasterizer from "../renderer/gl/GLRasterizer";
 import Camera from "../nodes/projection/Camera3D";
 import OrthographicCamera from "../nodes/projection/OrthographicCamera";
 import Vector3 from "../math/Vector3";
+import Shader from "../resources/Shader";
 
-export default class Stage {
+export default class Renderer {
 	
 	public rootNode: DisplayObject | null = null;
 
@@ -22,15 +23,21 @@ export default class Stage {
 	private _width: number;
 	private _height: number;
 
-	constructor(rasterizer: GLRasterizer, width: number, height: number) {
+	constructor(canvas: HTMLCanvasElement, defaultShader: Shader) {
+		const width = canvas.width;
+		const height = canvas.height;
+		const gl = canvas.getContext("webgl2") as WebGL2RenderingContext;
+		console.log((window as any).OffscreenCanvas);
 		this._camera = new OrthographicCamera(height / 2);
 		this._camera.transform.position = new Vector3(0, 0, -10);
-		this._rasterizer = rasterizer;
 		this._viewProjectionMatrix = mat4.create();
 		this._renderMatrix = mat4.create();
 		this._projectionMatrix = this._camera.computeProjectionMatrix(width / height);
 		this._width = width;
 		this._height = height;
+
+		this._rasterizer = new GLRasterizer(gl, defaultShader);
+		this._rasterizer.init();
 	}
 
 	public setSize(width: number, height: number) {

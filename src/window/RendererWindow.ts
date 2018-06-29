@@ -1,54 +1,33 @@
 import ModuleLoader from "../modules/ModuleLoader";
 import Module from "../modules/Module";
-import Stage from "../renderer/Stage";
-import GLRasterizer from "../gl/GLRasterizer";
-import ShaderLoader from "../loading/ShaderLoader";
+import Renderer from "../renderer/Renderer";
 import TestModule3DLoader from "../modules/TestModule3DLoader";
-import LocalPeerConnection from "../rtc/LocalPeerConnection";
+import ShaderLoader from "../resources/ShaderLoader";
+import Shader from "../resources/Shader";
 
 
 
 export default class RendererWindow {
 
-	private _stage!: Stage;
-
-	private _canvas!: HTMLCanvasElement;
-	private _canvas2!: HTMLCanvasElement;
-
-	private _rasterizer!: GLRasterizer;
-
-	private _module!: Module;
-
+	private _renderer: Renderer;
+	private _canvas: HTMLCanvasElement;
 	private _timestamp: number = 0;
 
-	private _gl!: WebGL2RenderingContext;
-
+	private _canvas2!: HTMLCanvasElement;
+	private _module!: Module;
 	private _ctx!: CanvasRenderingContext2D;
-	constructor() {
 
-
-		
+	constructor(defaultShader: Shader) {
+		this._canvas = this._createCanvas();
+		this._renderer = new Renderer(this._canvas, defaultShader);
+		this._openWindow();
 	}
 
 
 
 	public async load() {
-		this._canvas = this._createCanvas();
-		//await LocalPeerConnection.createConnection(this._canvas);
-
-		this._openWindow();
-
-		this._gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
-		const shaderLoader = new ShaderLoader(this._gl);
-		const defaultShader = await shaderLoader.load("standard.glsl");
-
-		this._rasterizer = new GLRasterizer(this._gl, defaultShader);
-		this._rasterizer.init();
-
-		this._stage = new Stage(this._rasterizer, this._gl.canvas.width, this._gl.canvas.height);
-
 		const moduleLoader: ModuleLoader = new TestModule3DLoader();
-		this._module = await moduleLoader.load(this._gl, this._stage);
+		this._module = await moduleLoader.load(this._renderer);
 	}
 
 	public start() {
@@ -58,7 +37,9 @@ export default class RendererWindow {
 	}
 
 	public static async main(): Promise<void> {
-		const window = new RendererWindow();
+		const shaderLoader = new ShaderLoader();
+		const defaultShader = await shaderLoader.load("standard.glsl");
+		const window = new RendererWindow(defaultShader);
 		await window.load();
 		window.start();
 	}
@@ -77,7 +58,7 @@ export default class RendererWindow {
 		this._resize(this._canvas);
 		this._module.update(deltaTime);
 		
-		this._stage.render();
+		this._renderer.render();
 		this._ctx.drawImage(this._canvas, 0, 0);
 
 		this._timestamp = timestamp;
@@ -102,7 +83,7 @@ export default class RendererWindow {
 			this._canvas2.height = this._canvas.height;
 		}
 
-		this._stage.setSize(canvas.width, canvas.height);
+		this._renderer.setSize(canvas.width, canvas.height);
 	}
 
 
@@ -112,7 +93,7 @@ export default class RendererWindow {
 			console.log("LOADED");
 			//const v = w.document.getElementById("video") as HTMLVideoElement;
 			this._canvas2 = w.document.getElementById("canvas") as HTMLCanvasElement;
-			this._ctx = this._canvas2.getContext("2d") as CanvasRenderingContext2D;
+			this._ctx = this._canvas2.getContext("2d", {alpha: false}) as CanvasRenderingContext2D;
 			
 			//const stream = this._canvas.captureStream(60);
 			//v.src = window.URL.createObjectURL(stream);

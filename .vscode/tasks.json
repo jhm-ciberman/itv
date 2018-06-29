@@ -17,6 +17,11 @@
 			],
 			"isBackground": true,
 			"auto": true
+		},
+		{
+			"type": "npm",
+			"script": "clean",
+			"problemMatcher": []
 		}
 	]
 }
