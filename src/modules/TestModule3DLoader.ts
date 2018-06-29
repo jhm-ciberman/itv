@@ -1,18 +1,18 @@
 import ModuleLoader from "./ModuleLoader";
 import Module from "./Module";
 import TestModule from "./TestModule3D";
-import Renderer from "../renderer/Renderer";
 import MeshRenderer from "../nodes/MeshRenderer";
 import DisplayObject from "../nodes/DisplayObject";
 import PerspectiveCamera from "../nodes/projection/PerspectiveCamera";
 import Texture from "../resources/Texture";
 import CubeMesh from "../resources/CubeMesh";
+import Scene from "../window/Viewport";
 
 export default class TestModule3DLoader extends ModuleLoader {
 
 
 
-	public async load(stage: Renderer): Promise<Module> {
+	public async load(stage: Scene): Promise<Module> {
 		const image1 = await this._loadImage("sonny.jpg");
 		const image2 = await this._loadImage("atm_cash.png");
 

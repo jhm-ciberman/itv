@@ -4,30 +4,30 @@ import Renderer from "../renderer/Renderer";
 import TestModule3DLoader from "../modules/TestModule3DLoader";
 import ShaderLoader from "../resources/ShaderLoader";
 import Shader from "../resources/Shader";
-
-
+import Viewport from "./Viewport";
+import { ScreenManager } from "./ScreenManager";
 
 export default class RendererWindow {
 
 	private _renderer: Renderer;
+	private _screenManager: ScreenManager;
 	private _canvas: HTMLCanvasElement;
 	private _timestamp: number = 0;
+	private _viewport: Viewport;
 
-	private _canvas2!: HTMLCanvasElement;
 	private _module!: Module;
-	private _ctx!: CanvasRenderingContext2D;
 
 	constructor(defaultShader: Shader) {
 		this._canvas = this._createCanvas();
 		this._renderer = new Renderer(this._canvas, defaultShader);
-		this._openWindow();
+		this._viewport = new Viewport(this._canvas.width, this._canvas.height);
+		this._screenManager = new ScreenManager();
 	}
-
-
 
 	public async load() {
 		const moduleLoader: ModuleLoader = new TestModule3DLoader();
-		this._module = await moduleLoader.load(this._renderer);
+		this._module = await moduleLoader.load(this._viewport);
+		await this._screenManager.init();
 	}
 
 	public start() {
@@ -58,8 +58,9 @@ export default class RendererWindow {
 		this._resize(this._canvas);
 		this._module.update(deltaTime);
 		
-		this._renderer.render();
-		this._ctx.drawImage(this._canvas, 0, 0);
+		this._renderer.render(this._viewport);
+		this._screenManager.showCanvas(this._canvas);
+
 
 		this._timestamp = timestamp;
 		window.requestAnimationFrame(this._render.bind(this));
@@ -78,29 +79,9 @@ export default class RendererWindow {
 			canvas.height = displayHeight;
 		}
 
-		if (this._canvas2) {
-			this._canvas2.width = this._canvas.width;
-			this._canvas2.height = this._canvas.height;
-		}
-
-		this._renderer.setSize(canvas.width, canvas.height);
+		this._screenManager.resize(canvas.width, canvas.height)
+		this._viewport.setSize(canvas.width, canvas.height);
 	}
-
-
-	private _openWindow() {
-		const w = window.open("other.html") as Window;
-		w.addEventListener("load", () => {
-			console.log("LOADED");
-			//const v = w.document.getElementById("video") as HTMLVideoElement;
-			this._canvas2 = w.document.getElementById("canvas") as HTMLCanvasElement;
-			this._ctx = this._canvas2.getContext("2d", {alpha: false}) as CanvasRenderingContext2D;
-			
-			//const stream = this._canvas.captureStream(60);
-			//v.src = window.URL.createObjectURL(stream);
-			//v.play();
-		});
-	}
-
 }
 
 
