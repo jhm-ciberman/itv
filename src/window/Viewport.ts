@@ -1,6 +1,8 @@
 import Camera3D from "../nodes/projection/Camera3D";
 import { mat4 } from "gl-matrix";
 import Scene from "../nodes/Scene";
+import Vector3 from "../math/Vector3";
+import OrthographicCamera from "../nodes/projection/OrthographicCamera";
 
 export default class Viewport {
 
@@ -12,11 +14,13 @@ export default class Viewport {
 
 	private _scene: Scene;
 
-	constructor(width: number, height: number, camera: Camera3D, scene: Scene) {
+	constructor(width: number, height: number, scene: Scene) {
 		this._width = width;
 		this._height = height;
-		this._camera = camera;
 		this._scene = scene;
+		this._camera = new OrthographicCamera(height / 2);
+		this._camera.transform.position = new Vector3(0, 0, -10);
+		
 		this._updateMatrix();
 	}
 

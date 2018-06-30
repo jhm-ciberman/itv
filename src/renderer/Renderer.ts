@@ -16,9 +16,14 @@ export default class Renderer {
 
 	private _viewports: Set<Viewport> = new Set();
 
-	constructor(canvas: HTMLCanvasElement, defaultShader: Shader) {
+	private readonly _canvas: HTMLCanvasElement;
 
-		const gl = canvas.getContext("webgl2") as WebGL2RenderingContext;
+	constructor(width: number, height: number, defaultShader: Shader) {
+		this._canvas = document.createElement("canvas");
+		this._canvas.width = width;
+		this._canvas.height = height;
+
+		const gl = this._canvas.getContext("webgl2") as WebGL2RenderingContext;
 
 		this._viewProjectionMatrix = mat4.create();
 		this._renderMatrix = mat4.create();
@@ -26,6 +31,15 @@ export default class Renderer {
 
 		this._rasterizer = new GLRasterizer(gl, defaultShader);
 		this._rasterizer.init();
+	}
+
+	public get canvasElement(): HTMLCanvasElement {
+		return this._canvas;
+	}
+
+	public resize(width: number, height: number) {
+		this._canvas.width = width;
+		this._canvas.height = height;
 	}
 
 	public addViewport(viewport: Viewport) {
@@ -66,5 +80,6 @@ export default class Renderer {
 		}
 	}
 
+	
 
 }
