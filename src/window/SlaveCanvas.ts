@@ -31,7 +31,9 @@ export class SlaveCanvas {
 	}
 
 	public destroy() {
-		window.document.body.removeChild(this._canvas);
+		if (window.document.body.contains(this._canvas)) {
+			window.document.body.removeChild(this._canvas);
+		}
 		this._texture.free();
 		this._gl.finish();
 	}

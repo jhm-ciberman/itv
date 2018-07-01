@@ -9,13 +9,14 @@ export class DisplayWindowFactory {
 	}
 
 	public open(htmlCanvasToShow: HTMLCanvasElement): Promise<DisplayWindow> {
-		
+
 		return new Promise((resolve) => {
 
 			const newWindow = window.open("other.html") as Window;
 
 			newWindow.addEventListener("load", () => {
-				const dw = new DisplayWindow(newWindow, htmlCanvasToShow, this._defaultShader);
+				const dw = new DisplayWindow(htmlCanvasToShow, this._defaultShader);
+				dw.window = newWindow;
 				resolve(dw);
 			});
 

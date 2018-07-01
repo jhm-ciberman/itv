@@ -1,5 +1,5 @@
 import Shader from "../resources/Shader";
-import {screen as electronScreen} from "electron";
+//import {screen as electronScreen} from "electron";
 import Viewport from "./Viewport";
 import Renderer from "../renderer/Renderer";
 import Scene from "../nodes/Scene";
@@ -15,8 +15,9 @@ export class ScreenManager {
 		this._renderer = new Renderer(800, 600, defaultShader);
 		this._viewport = new Viewport(800, 600, scene);
 		this._renderer.addViewport(this._viewport);
-		
-		this._displayWindow = new DisplayWindow(window, this._renderer.canvasElement, defaultShader);
+
+		this._displayWindow = new DisplayWindow(this._renderer.canvasElement, defaultShader);
+		this._displayWindow.window = window;
 		console.log(this._displayWindow.directMode);
 		//const displays = electronScreen.getAllDisplays();
 		//console.log(displays);
