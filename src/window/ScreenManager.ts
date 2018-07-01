@@ -7,23 +7,19 @@ import { DisplayWindow } from "./DisplayWindow";
 
 export class ScreenManager {
 
-	private _defaultShader: Shader;
-
 	private _renderer: Renderer;
 	private _viewport: Viewport;
 	private _displayWindow: DisplayWindow;
 
 	constructor(scene: Scene, defaultShader: Shader) {
-		this._defaultShader = defaultShader;
-
 		this._renderer = new Renderer(800, 600, defaultShader);
 		this._viewport = new Viewport(800, 600, scene);
 		this._renderer.addViewport(this._viewport);
-
-		this._displayWindow = new DisplayWindow(window, this._renderer, false, defaultShader);
 		
-		const displays = electronScreen.getAllDisplays();
-		console.log(displays);
+		this._displayWindow = new DisplayWindow(window, this._renderer.canvasElement, defaultShader);
+		console.log(this._displayWindow.directMode);
+		//const displays = electronScreen.getAllDisplays();
+		//console.log(displays);
 	}
 
 	public renderAll() {
@@ -38,16 +34,6 @@ export class ScreenManager {
 
 	public async init(): Promise<void> {
 		//await this._openWindow();
-	}
-
-	private _openWindow(): Promise<DisplayWindow> {
-		return new Promise((resolve) => {
-			const newWindow = window.open("other.html") as Window;
-			newWindow.addEventListener("load", () => {
-				const dw = new DisplayWindow(newWindow, this._renderer, false, this._defaultShader);
-				resolve(dw);
-			});
-		});
 	}
 
 	private _resize() {

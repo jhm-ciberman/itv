@@ -4,44 +4,65 @@ import Shader from "../resources/Shader";
 
 export class DisplayWindow {
 	private _window: Window;
-	private _renderer: Renderer;
-	private _directMode: boolean;
+	private _canvasElement: HTMLCanvasElement;
+	private _directMode: boolean = false;
 	private _slaveCanvas: SlaveCanvas | null = null;
 	private _defaultShader: Shader;
-	constructor(window: Window, renderer: Renderer, directMode: boolean, defaultShader: Shader) {
+	private _body: HTMLElement;
+	constructor(window: Window, canvasElement: HTMLCanvasElement, defaultShader: Shader) {
 		this._window = window;
-		this._renderer = renderer;
 		this._directMode = false;
+		this._body = this._window.document.body;
 		this._defaultShader = defaultShader;
-		this._updateDirectModeValue(directMode);
+		this._canvasElement = canvasElement;
+		this.updateDirectModeValue();
 	}
 
 	public get directMode(): boolean {
 		return this._directMode;
 	}
 
-	public set directMode(value: boolean) {
-		if (value !== this._directMode) {
-			this._updateDirectModeValue(value);
+	public get canvasElement(): HTMLCanvasElement {
+		return this._canvasElement;
+	}
+
+	public set canvasElement(value: HTMLCanvasElement) {
+		if (value !== this._canvasElement) {
+			this._removeCanvasFromBody();
+			this._canvasElement = value;
+			this.updateDirectModeValue(true);
 		}
 	}
 
-	private _updateDirectModeValue(value: boolean) {
-		this._directMode = value;
-		console.log("Direct Mode = " + value);
-		if (value) {
+	public updateDirectModeValue(force: boolean = false) {
+		const parent = this._canvasElement.parentElement;
+		const newValue = (parent === this._body || parent === null);
+		if (this._directMode !== newValue || force) {
+			this._directMode = newValue;
+			this._forceUpdateDirectMode();
+		}
+	}
+
+	private _forceUpdateDirectMode() {
+		if (this._directMode) {
 			if (this._slaveCanvas) {
 				this._slaveCanvas.destroy();
 				this._slaveCanvas = null;
 			}
-			window.document.body.appendChild(this._renderer.canvasElement);
+			if (!this._body.contains(this._canvasElement)) {
+				this._body.appendChild(this._canvasElement);
+			}
 		} else {
-			if (window.document.body.contains(this._renderer.canvasElement)) {
-				window.document.body.removeChild(this._renderer.canvasElement);
-			}
+			this._removeCanvasFromBody();
 			if (!this._slaveCanvas) {
-				this._slaveCanvas = new SlaveCanvas(this._window, this._renderer.canvasElement, this._defaultShader);
+				this._slaveCanvas = new SlaveCanvas(this._window, this._canvasElement, this._defaultShader);
 			}
+		}
+	}
+
+	private _removeCanvasFromBody() {
+		if (this._body.contains(this._canvasElement)) {
+			this._body.removeChild(this._canvasElement);
 		}
 	}
 
@@ -55,6 +76,13 @@ export class DisplayWindow {
 		if (this._slaveCanvas) {
 			this._slaveCanvas.resize(width, height);
 		}
+	}
+
+	public destroy() {
+		if (this._slaveCanvas) {
+			this._slaveCanvas.destroy();
+		}
+		this._removeCanvasFromBody();
 	}
 
 	
